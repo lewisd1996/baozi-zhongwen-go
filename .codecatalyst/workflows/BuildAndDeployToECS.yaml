@@ -66,14 +66,14 @@ Actions:
       task-definition: /artifacts/DeploytoAmazonECS/TaskDefinition/${RenderAmazonECStaskdefinition.task-definition}
       service: BZ-WebApp
       cluster: arn:aws:ecs:eu-west-2:450706242431:cluster/BaoziZhongwenCdkStack-EcsDefaultClusterMnL3mNNYNVPC9C1EC7A3-qeCyQPtXh9Vx
-      region: us-west-2
+      region: eu-west-2
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
     Environment:
       Connections:
         - Role: CodeCatalystWorkflowDevelopmentRole-LEWIS_BAO
-        # Add account id within quotes. Eg: "12345678"
+          # Add account id within quotes. Eg: "12345678"
           Name: "450706242431"
       Name: Non-Prod
     DependsOn:
@@ -83,6 +83,3 @@ Actions:
         - TaskDefinition
       Sources:
         - WorkflowSource
-
-
-
