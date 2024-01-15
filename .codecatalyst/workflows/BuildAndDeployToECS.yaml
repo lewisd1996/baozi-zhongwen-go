@@ -31,14 +31,34 @@ Actions:
     Environment:
       Connections:
         - Role: CodeCatalystWorkflowDevelopmentRole-LEWIS_BAO
-        # Add account id within quotes. Eg: "123456789012"
+          # Add account id within quotes. Eg: "123456789012"
           Name: "450706242431"
       Name: Non-prod
     Configuration:
       Steps:
-        - Run: export account=`aws sts get-caller-identity --output text | awk '{ print $1 }'`
-        - Run: aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${registry}
+        - Run: export account=`aws sts get-caller-identity --output text | awk '{ print $1
+            }'`
+        - Run: aws ecr get-login-password --region ${region} | docker login --username AWS
+            --password-stdin ${registry}
         - Run: docker build -t appimage .
         - Run: docker tag appimage ${registry}/${image}:${WorkflowSource.CommitId}
         - Run: docker push --all-tags ${registry}/${image}
         - Run: export IMAGE=${registry}/${image}:${WorkflowSource.CommitId}
+  RenderAmazonECStaskdefinition:
+    Identifier: aws/ecs-render-task-definition@v1
+    Configuration:
+      image: ${Build_application.IMAGE}
+      container-name: BZ-Container
+      task-definition: task.json
+    Outputs:
+      Artifacts:
+        - Name: TaskDefinition
+          Files:
+            - task-definition*
+    DependsOn:
+      - Build_application
+    Inputs:
+      Sources:
+        - WorkflowSource
+
+
