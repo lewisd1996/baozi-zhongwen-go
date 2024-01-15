@@ -1,0 +1,5 @@
+package components
+
+templ Button(text string, isPrimary bool) {
+	<button class={ "button", templ.KV("is-primary", isPrimary) }>{ text }</button>
+}

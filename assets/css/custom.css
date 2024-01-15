@@ -1,0 +1,27 @@
+.fade-me-in.htmx-added {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-me-in {
+  opacity: 1;
+  transition: all 0.25s ease-out;
+  transform: translateX(0);
+}
+
+.fade-me-out.htmx-swapping {
+  opacity: 0;
+  transition: all 0.25s ease-out;
+  transform: translateY(10px);
+}
+
+.blur {
+  filter: blur(0.75rem);
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+.hanzi {
+  font-family: "ZCOOL XiaoWei", serif;
+}

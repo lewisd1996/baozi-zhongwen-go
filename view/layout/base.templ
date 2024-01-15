@@ -1,0 +1,28 @@
+package layout
+
+templ Base(showNavbar bool, showFooter bool, children ...string) {
+	<html>
+		<head>
+			<title>Random HSK Vocab Picker - Baozi 中文</title>
+			<script src="//unpkg.com/alpinejs" defer></script>
+			<script src="/assets/js/htmx.min.js"></script>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+			<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet"/>
+			<link rel="stylesheet" href="/assets/css/tailwind.css"/>
+			<link rel="stylesheet" href="/assets/css/custom.css"/>
+		</head>
+		<body class="bg-slate-950">
+			<div class="flex flex-col min-h-screen">
+				if showNavbar {
+					@Navbar()
+				}
+				{ children... }
+				if showFooter {
+					@Footer()
+				}
+			</div>
+		</body>
+	</html>
+}
