@@ -16,7 +16,7 @@ Actions:
         - WorkflowSource
       Variables:
         - Name: region
-          Value: us-west-2
+          Value: eu-west-2
         - Name: registry
           Value: 450706242431.dkr.ecr.eu-west-2.amazonaws.com
         - Name: image
