@@ -51,6 +51,6 @@ func main() {
 	app.router.GET("/vocab", VocabHandler.HandleVocabShow)
 
 	// Start server
-	app.router.Start(":80")
+	app.router.Start(":3000")
 
 }
