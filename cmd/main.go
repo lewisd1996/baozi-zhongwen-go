@@ -52,5 +52,4 @@ func main() {
 
 	// Start server
 	app.router.Start(":80")
-
 }
