@@ -43,20 +43,20 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><h2 id=\"hanzi\" class=\"text-9xl text-teal-300 transition-all hanzi\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><h2 id=\"hanzi\" class=\"text-3xl lg:text-9xl text-teal-300 transition-all hanzi\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(hanzi)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/vocabCard.templ`, Line: 7, Col: 76}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/vocabCard.templ`, Line: 7, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><h3 id=\"pinyin\" class=\"blur text-4xl hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><h3 id=\"pinyin\" class=\"blur text-2xl lg:text-4xl hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,7 +69,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h3><p id=\"english\" class=\"blur hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h3><p id=\"english\" class=\"text-sm blur hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
