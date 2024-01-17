@@ -22,3 +22,5 @@ go.work
 
 # From internal/tailwind
 node_modules
+
+tmp
