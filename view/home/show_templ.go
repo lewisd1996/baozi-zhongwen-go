@@ -34,7 +34,7 @@ func Show(hanzi string, pinyin string, english string, hskLevel int) templ.Compo
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto flex flex-1 flex-col flex-wrap items-center justify-center\"><h1 class=\"text-slate-50 mb-6 font-semibold text-4xl\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto flex flex-1 flex-col flex-wrap items-center justify-center\"><h1 class=\"text-slate-50 mb-6 font-semibold text-center text-lg lg:text-4xl\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

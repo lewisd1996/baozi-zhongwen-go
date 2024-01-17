@@ -25,7 +25,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"vocab\" class=\"relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-1/2 transition-all fade-me-in fade-me-out will-change-transform\"><span id=\"level\" class=\"text-teal-300 transition-all absolute top-3 left-4\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"vocab\" class=\"relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-full lg:w-1/2 transition-all fade-me-in fade-me-out will-change-transform\"><span id=\"level\" class=\"text-teal-300 transition-all absolute top-3 left-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
