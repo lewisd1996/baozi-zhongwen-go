@@ -1,5 +1,5 @@
 {
-    "executionRoleArn": "arn:aws:iam::450706242431:role/BZ-AppRole",
+    "executionRoleArn": "arn:aws:iam::450706242431:role/Prod-BZ-AppRole",
     "containerDefinitions": [
         {
             "name": "Prod-BZ-Container",
