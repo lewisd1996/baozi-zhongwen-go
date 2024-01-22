@@ -20,7 +20,7 @@ Actions:
         - Name: registry
           Value: 450706242431.dkr.ecr.eu-west-2.amazonaws.com
         - Name: image
-          Value: baozi-zhongwen-ecs-infra-stack
+          Value: prod-baozi-zhongwen-ecs-infra-stack
     Outputs:
       AutoDiscoverReports:
         Enabled: false
@@ -48,7 +48,7 @@ Actions:
     Identifier: aws/ecs-render-task-definition@v1
     Configuration:
       image: ${Build_application.IMAGE}
-      container-name: BZ-Container
+      container-name: Prod-BZ-Container
       task-definition: task.json
     Outputs:
       Artifacts:
@@ -64,8 +64,8 @@ Actions:
     Identifier: aws/ecs-deploy@v1
     Configuration:
       task-definition: /artifacts/DeploytoAmazonECS/TaskDefinition/${RenderAmazonECStaskdefinition.task-definition}
-      service: BZ-WebApp
-      cluster: arn:aws:ecs:eu-west-2:450706242431:cluster/BaoziZhongwenCdkStack-EcsDefaultClusterMnL3mNNYNVPC9C1EC7A3-qeCyQPtXh9Vx
+      service: ProdBaoziZhongwenCdkStack-ProdBZAppService81A0CC71-MYAzlcLXKazh
+      cluster: arn:aws:ecs:eu-west-2:450706242431:cluster/ProdBaoziZhongwenCdkStack-EcsDefaultClusterMnL3mNNYNProdBZVPCBE76BB18-6LOeiNAiqYqO
       region: eu-west-2
     Compute:
       Type: EC2
