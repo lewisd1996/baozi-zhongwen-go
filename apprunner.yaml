@@ -5,10 +5,10 @@ runtime: go1
 build:
   commands:
     build:
-      - go build -o baozi-zhongwen cmd/main.go
+      - go build cmd/main.go
 
 run:
   runtime-version: 1.18.7
-  command: ./baozi-zhongwen
+  command: ./main
   network:
     port: 3000
