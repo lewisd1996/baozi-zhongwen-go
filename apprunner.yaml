@@ -4,7 +4,8 @@ runtime: go1
 
 build:
   commands:
-    - go build -o baozi-zhongwen ./cmd/main.go
+    build:
+      - go build -o baozi-zhongwen ./cmd/main.go
 
 run:
   command: ./baozi-zhongwen
