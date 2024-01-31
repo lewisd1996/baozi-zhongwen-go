@@ -1,0 +1,10 @@
+version: 1.0
+
+runtime: go
+
+build:
+  commands:
+    - go build -o myapp ./cmd
+
+start:
+  command: "./myapp"
