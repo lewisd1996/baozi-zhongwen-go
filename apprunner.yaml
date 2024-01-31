@@ -5,10 +5,9 @@ runtime: go1
 build:
   commands:
     build:
-      - go build -o baozi-zhongwen ./cmd/main.go
+      - go build -o baozi-zhongwen cmd/main.go
 
 run:
   command: ./baozi-zhongwen
   network:
     port: 3000
-    env: APP_PORT
