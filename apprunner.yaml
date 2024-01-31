@@ -8,6 +8,7 @@ build:
       - go build -o baozi-zhongwen cmd/main.go
 
 run:
+  runtime-version: 1.18.7
   command: ./baozi-zhongwen
   network:
     port: 3000
