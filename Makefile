@@ -4,5 +4,4 @@ run:
 	@go run cmd/main.go
 
 build:
-	@templ generate
 	@go build -o main cmd/main.go
