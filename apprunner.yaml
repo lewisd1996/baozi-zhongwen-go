@@ -9,7 +9,7 @@ build:
     
 
 run:
-  runtime-version: 1.18.7
+  runtime-version: 1.18
   command: ./main
   network:
     port: 3000

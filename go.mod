@@ -1,6 +1,6 @@
 module github.com/lewisd1996/baozi-zhongwen
 
-go 1.18.10
+go 1.18
 
 require (
 	github.com/a-h/templ v0.2.513
