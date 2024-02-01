@@ -5,5 +5,4 @@ run:
 
 build:
 	@templ generate
-	@cd internal/tailwind && npm run build
 	@go build -o main cmd/main.go
