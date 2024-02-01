@@ -8,7 +8,7 @@ RUN go mod download
 COPY . /app
 # Build the application
 # Update the build command to target the cmd directory
-RUN CGO_ENABLED=0 GOOS=linux go build -o /entrypoint ./cmd
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /entrypoint ./cmd
 
 # Deploy stage
 FROM gcr.io/distroless/static-debian11 AS release-stage
@@ -18,7 +18,5 @@ COPY --from=build-stage /entrypoint /entrypoint
 COPY --from=build-stage /app/assets /assets
 # Expose the port your app runs on
 EXPOSE 3000
-# Use a non-root user for running the application
-USER nonroot:nonroot
 # Set the entry point to the compiled binary
 ENTRYPOINT ["/entrypoint"]
