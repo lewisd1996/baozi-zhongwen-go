@@ -5,7 +5,8 @@ runtime: go1
 build:
   commands:
     build:
-      - go build cmd/main.go
+      - make build
+    
 
 run:
   runtime-version: 1.18.7
