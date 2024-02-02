@@ -1,0 +1,5 @@
+package components
+
+templ Link(class, href, text string) {
+	<a class={ "text-teal-900 underline tracking-wide leading-6", class } href={ templ.URL(href) }>{ text }</a>
+}
