@@ -72,6 +72,10 @@ func main() {
 	app.router.GET("/vocab", VocabHandler.HandleVocabShow)
 
 	// Start server
-	app.router.Start(":3000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	app.router.Start(fmt.Sprintf(":%s", port))
 
 }
