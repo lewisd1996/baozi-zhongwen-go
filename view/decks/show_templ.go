@@ -33,7 +33,7 @@ func Show(route string) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-1 flex-col flex-wrap\"><h1 class=\"text-slate-900 font-semibold text-lg lg:text-4xl lg:leading-none\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-1 flex-col flex-wrap\"><h1 class=\"text-slate-900 font-semibold text-lg lg:hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -46,7 +46,7 @@ func Show(route string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = DecksList("mt-8").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = DecksList("").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

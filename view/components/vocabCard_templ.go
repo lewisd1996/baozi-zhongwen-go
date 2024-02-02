@@ -25,7 +25,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"vocab\" class=\"relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-full lg:w-1/2 transition-all fade-me-in fade-me-out will-change-transform\"><span id=\"level\" class=\"text-teal-300 transition-all absolute top-3 left-4\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"vocab\" class=\"relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-full lg:w-1/2 transition-all fade-me-in fade-me-out will-change-transform\"><span id=\"level\" class=\"text-teal-900 transition-all absolute top-3 left-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -43,7 +43,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><h2 id=\"hanzi\" class=\"text-3xl lg:text-9xl text-teal-300 transition-all hanzi\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><h2 id=\"hanzi\" class=\"text-3xl lg:text-9xl text-teal-900 transition-all hanzi\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -56,7 +56,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><h3 id=\"pinyin\" class=\"blur text-2xl lg:text-4xl hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><h3 id=\"pinyin\" class=\"blur text-2xl lg:text-4xl hover:cursor-pointer mt-4 text-teal-900 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,7 +69,7 @@ func VocabCard(hanzi string, pinyin string, english string, level int) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h3><p id=\"english\" class=\"text-sm blur hover:cursor-pointer mt-4 text-teal-300 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h3><p id=\"english\" class=\"text-sm blur hover:cursor-pointer mt-4 text-teal-900 transition-all\" x-data=\"{ clicked: false }\" x-on:click=\"clicked = true\" :class=\"{ &#39;blur&#39;: !clicked, &#39;pointer-events-none hover:cursor-text&#39;: clicked }\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

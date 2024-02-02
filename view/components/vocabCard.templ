@@ -4,11 +4,11 @@ import "strconv"
 
 templ VocabCard(hanzi string, pinyin string, english string, level int) {
 	<div id="vocab" class="relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-full lg:w-1/2 transition-all fade-me-in fade-me-out will-change-transform">
-		<span id="level" class="text-teal-300 transition-all absolute top-3 left-4">HSK{ strconv.Itoa(level) }</span>
-		<h2 id="hanzi" class="text-3xl lg:text-9xl text-teal-300 transition-all hanzi">{ hanzi }</h2>
+		<span id="level" class="text-teal-900 transition-all absolute top-3 left-4">HSK{ strconv.Itoa(level) }</span>
+		<h2 id="hanzi" class="text-3xl lg:text-9xl text-teal-900 transition-all hanzi">{ hanzi }</h2>
 		<h3
 			id="pinyin"
-			class="blur text-2xl lg:text-4xl hover:cursor-pointer mt-4 text-teal-300 transition-all"
+			class="blur text-2xl lg:text-4xl hover:cursor-pointer mt-4 text-teal-900 transition-all"
 			x-data="{ clicked: false }"
 			x-on:click="clicked = true"
 			:class="{ 'blur': !clicked, 'pointer-events-none hover:cursor-text': clicked }"
@@ -17,7 +17,7 @@ templ VocabCard(hanzi string, pinyin string, english string, level int) {
 		</h3>
 		<p
 			id="english"
-			class="text-sm blur hover:cursor-pointer mt-4 text-teal-300 transition-all"
+			class="text-sm blur hover:cursor-pointer mt-4 text-teal-900 transition-all"
 			x-data="{ clicked: false }"
 			x-on:click="clicked = true"
 			:class="{ 'blur': !clicked, 'pointer-events-none hover:cursor-text': clicked }"

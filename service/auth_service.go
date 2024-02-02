@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,19 +14,37 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
-// Initialize a new AuthService
-
 type AuthService struct {
 	cognitoClient *cognitoidentityprovider.CognitoIdentityProvider
 	jwkSet        jwk.Set
+	clientId      string
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                    Init                                    */
+/* -------------------------------------------------------------------------- */
 
 func NewAuthService(cognitoClient *cognitoidentityprovider.CognitoIdentityProvider) *AuthService {
-	jwkSet := getJWKSet("https://cognito-idp.eu-west-2.amazonaws.com/eu-west-2_1ItHH7zDJ/.well-known/jwks.json")
-	return &AuthService{cognitoClient: cognitoClient, jwkSet: jwkSet}
+	cognitoClientId := os.Getenv("AWS_COGNITO_CLIENT_ID")
+	cognitoUserPoolId := os.Getenv("AWS_COGNITO_USER_POOL_ID")
+
+	if cognitoClientId == "" {
+		panic("missing AWS_COGNITO_CLIENT_ID")
+	}
+	if cognitoUserPoolId == "" {
+		panic("missing AWS_COGNITO_USER_POOL_ID")
+	}
+
+	jwkSet := getJWKSet(fmt.Sprintf("https://cognito-idp.eu-west-2.amazonaws.com/%s/.well-known/jwks.json", cognitoUserPoolId))
+
+	return &AuthService{
+		cognitoClient: cognitoClient,
+		jwkSet:        jwkSet,
+		clientId:      cognitoClientId,
+	}
 }
 
-// Login
+/* ---------------------------------- Login --------------------------------- */
 
 func (service *AuthService) Login(username, password string) (*cognitoidentityprovider.AuthenticationResultType, error) {
 	input := &cognitoidentityprovider.InitiateAuthInput{
@@ -33,7 +53,7 @@ func (service *AuthService) Login(username, password string) (*cognitoidentitypr
 			"USERNAME": aws.String(username),
 			"PASSWORD": aws.String(password),
 		},
-		ClientId: aws.String("5a2vaqjfqsuko38tioiletjh9e"),
+		ClientId: aws.String(service.clientId),
 	}
 
 	result, err := service.cognitoClient.InitiateAuth(input)
@@ -43,7 +63,7 @@ func (service *AuthService) Login(username, password string) (*cognitoidentitypr
 	return result.AuthenticationResult, nil
 }
 
-// Logout
+/* --------------------------------- Logout --------------------------------- */
 
 func (service *AuthService) Logout(c echo.Context) error {
 	accessTokenCookie, err := c.Cookie("access_token")
@@ -82,7 +102,52 @@ func (service *AuthService) Logout(c echo.Context) error {
 	return nil
 }
 
-// Utility functions
+/* -------------------------------- Register -------------------------------- */
+
+func (service *AuthService) Register(username, password string) (*cognitoidentityprovider.SignUpOutput, error) {
+	input := &cognitoidentityprovider.SignUpInput{
+		ClientId: aws.String(service.clientId),
+		Username: aws.String(username),
+		Password: aws.String(password),
+	}
+
+	result, err := service.cognitoClient.SignUp(input)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+/* --------------------------------- Confirm -------------------------------- */
+
+func (service *AuthService) Confirm(username, code string) error {
+	input := &cognitoidentityprovider.ConfirmSignUpInput{
+		ClientId:         aws.String(service.clientId),
+		Username:         aws.String(username),
+		ConfirmationCode: aws.String(code),
+	}
+
+	_, err := service.cognitoClient.ConfirmSignUp(input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *AuthService) ResendConfirmationCode(username string) error {
+	input := &cognitoidentityprovider.ResendConfirmationCodeInput{
+		ClientId: aws.String(service.clientId),
+		Username: aws.String(username),
+	}
+
+	_, err := service.cognitoClient.ResendConfirmationCode(input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+/* ---------------------------------- Token --------------------------------- */
 
 func (service *AuthService) ValidateToken(accessToken string) (jwt.Token, error) {
 	token, err := jwt.ParseString(accessToken, jwt.WithKeySet(service.jwkSet), jwt.WithAcceptableSkew(1*time.Minute))
@@ -100,7 +165,7 @@ func (service *AuthService) RefreshToken(refreshToken string) (*cognitoidentityp
 		AuthParameters: map[string]*string{
 			"REFRESH_TOKEN": aws.String(refreshToken),
 		},
-		ClientId: aws.String("5a2vaqjfqsuko38tioiletjh9e"),
+		ClientId: aws.String(service.clientId),
 	}
 
 	result, err := service.cognitoClient.InitiateAuth(input)

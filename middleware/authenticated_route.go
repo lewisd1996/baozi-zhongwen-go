@@ -10,33 +10,39 @@ import (
 
 func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthService) echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		println("IN AUTHENTICATED ROUTE MIDDLEWARE")
+
 		// Extract the token from the cookie
 		cookie, err := c.Cookie("access_token") // Use the correct cookie name
 
 		if err != nil {
+			println("NO ACCESS ERR:", err.Error())
 			// Handle missing cookie (token)
-			return echo.NewHTTPError(http.StatusUnauthorized, "missing token cookie")
+			return c.Redirect(http.StatusFound, "/login")
 		}
 		tokenString := cookie.Value
 
 		// Use your JWK set to validate the token
 		_, err = service.ValidateToken(tokenString)
 		if err != nil {
+			println("TOKEN ERR:", err.Error())
 			// If access token is expired, try to refresh it
 			refreshToken, err := c.Cookie("refresh_token")
 			if err != nil {
 				// Handle missing refresh token
-				return echo.NewHTTPError(http.StatusUnauthorized, "missing refresh token")
+				return c.Redirect(http.StatusFound, "/login")
 			}
 			result, err := service.RefreshToken(refreshToken.Value)
 			if err != nil {
 				// Handle error in refreshing tokens
-				return echo.NewHTTPError(http.StatusUnauthorized, "unable to refresh tokens")
+				return c.Redirect(http.StatusFound, "/login")
 			}
 
 			setTokenCookies(c, result)
 		}
 
+		println("TOKEN VALID")
 		// Token is valid, proceed with the request
 		return next(c)
 	}

@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -28,7 +29,14 @@ func (h LoginHandler) HandleLoginSubmit(c echo.Context) error {
 	authResult, err := h.app.Auth.Login(username, password)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("[LOGIN ERROR]:", err.Error())
+
+		if err.Error() == "UserNotConfirmedException: User is not confirmed." {
+			encodedUsername := url.QueryEscape(username)
+			c.Response().Header().Set("HX-Redirect", "/register/confirm?username="+encodedUsername)
+			return c.NoContent(http.StatusOK)
+		}
+
 		return HTML(c, login.LoginForm(err))
 	}
 

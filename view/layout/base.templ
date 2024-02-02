@@ -1,7 +1,10 @@
 package layout
 
-templ Base(showNavbar bool, showFooter bool, children ...string) {
-	<html>
+import "fmt"
+import "github.com/google/uuid"
+
+templ Base(route string, showAppShell bool, children ...string) {
+	<html lang="en">
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<head>
@@ -13,19 +16,19 @@ templ Base(showNavbar bool, showFooter bool, children ...string) {
 			<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 			<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet"/>
 			<link rel="stylesheet" href="/assets/css/tailwind.css"/>
-			<link rel="stylesheet" href="/assets/css/styles.css"/>
-			<link rel="stylesheet" href="/assets/css/custom.css"/>
+			<link rel="stylesheet" href={ fmt.Sprintf("/assets/css/styles.css?bust=%s", uuid.New().String()) }/>
+			<link rel="stylesheet" href={ fmt.Sprintf("/assets/css/custom.css?bust=%s", uuid.New().String()) }/>
 			<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg"/>
 			<link rel="icon" type="image/png" href="/assets/img/favicon.png"/>
 		</head>
-		<body class="bg-slate-950">
-			<div class="flex flex-col min-h-screen container px-8 mx-auto">
-				if showNavbar {
-					@Navbar()
-				}
-				{ children... }
-				if showFooter {
-					@Footer()
+		<body class="bg-slate-100 relative">
+			<div class="flex flex-col min-h-screen">
+				if showAppShell {
+					@Shell(route) {
+						{ children... }
+					}
+				} else {
+					{ children... }
 				}
 			</div>
 		</body>

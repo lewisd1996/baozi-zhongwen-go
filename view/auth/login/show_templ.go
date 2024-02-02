@@ -31,25 +31,52 @@ func Show(route string) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex min-h-full flex-col items-center flex-1 justify-center py-12 sm:px-6 px-8 bg-gradient-to-tr bg-slate-100\"><div class=\"sm:mx-auto flex justify-center items-center sm:w-full sm:max-w-md\"><svg class=\"w-9 h-9\" viewBox=\"0 0 1024 1024\" class=\"icon\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\"><path d=\"M619.789474 862.315789h-215.578948C232.448 862.315789 107.789474 744.340211 107.789474 581.820632c0-153.842526 110.187789-242.876632 198.736842-314.421895C373.409684 213.369263 431.157895 166.723368 431.157895 107.789474h53.894737c0 84.668632-70.251789 141.419789-144.653474 201.539368C252.550737 380.308211 161.684211 453.712842 161.684211 581.820632 161.684211 715.237053 261.416421 808.421053 404.210526 808.421053h215.578948c142.794105 0 242.526316-93.184 242.526315-226.600421 0-128.107789-90.866526-201.512421-178.714947-272.49179C609.199158 249.209263 538.947368 192.458105 538.947368 107.789474h53.894737c0 58.933895 57.775158 105.579789 124.631579 159.609263C805.995789 338.944 916.210526 427.978105 916.210526 581.820632 916.210526 744.340211 791.552 862.315789 619.789474 862.315789z m2.829473-392.165052l-80.842105-161.684211 48.208842-24.117894 80.842105 161.68421-48.208842 24.117895z m-221.237894 0l-48.208842-24.117895 80.842105-161.68421 48.208842 24.117894-80.842105 161.684211z\" fill=\"#231F20\"></path></svg><h2 class=\"mb-1 text-3xl text-slate-900 font-bold\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"w-full min-h-full flex-1 flex bg-slate-950\"><div class=\"mx-auto max-w-7xl flex-1\"><div class=\"flex flex-col lg:flex-row h-full\"><!--")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Var3 := `BAOZI `
+			templ_7745c5c3_Var3 := ` LEFT `
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span class=\"hanzi\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"relative w-full bg-cover lg:w-6/12 xl:w-7/12 bg-gradient-to-r from-white via-white to-slate-100\"><img src=\"https://source.unsplash.com/1600x900/?chengdu\" alt=\"Chengdu\" class=\"w-full h-full object-cover object-center\"><div class=\"w-full h-full absolute top-0 left-0 bg-slate-950/40\"></div></div><!--")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Var4 := `中文`
+			templ_7745c5c3_Var4 := ` RIGHT `
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></h2></div><div class=\"mt-10 sm:mx-auto w-3/4 md:max-w-[480px]\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"w-full bg-white lg:w-6/12 xl:w-5/12\"><div class=\"flex flex-col justify-center w-full h-full p-10 lg:p-16 xl:p-24\"><h4 class=\"w-full text-3xl font-bold\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var5 := `Login`
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h4><p class=\"text-lg text-slate-500\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var6 := `or `
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"/register\" class=\"text-teal-600 underline\" data-primary=\"teal-600\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var7 := `register`
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></p><div class=\"relative w-full mt-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -57,7 +84,7 @@ func Show(route string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div></div></div></div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

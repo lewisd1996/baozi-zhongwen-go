@@ -7,8 +7,8 @@ import (
 templ Show(route string) {
 	@layout.Base(route, true) {
 		<div class="flex flex-1 flex-col flex-wrap">
-			<h1 class="text-slate-900 font-semibold text-lg lg:text-4xl lg:leading-none">Decks</h1>
-			@DecksList("mt-8")
+			<h1 class="text-slate-900 font-semibold text-lg lg:hidden">Decks</h1>
+			@DecksList("")
 		</div>
 	}
 }

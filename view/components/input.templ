@@ -1,5 +1,8 @@
 package components
 
-templ Input(typ, name string) {
-	<input type={ typ } name={ name }/>
+templ Input(containerClass, defaultValue,  id, inputClass, typ, name, labelText string) {
+	<div class={ containerClass }>
+		<label class="block text-sm font-medium text-slate-600">{ labelText }</label>
+		<input class={ "py-3.5 px-3 mt-1 rounded-lg border border-slate-300 bg-white shadow shadow-black/5", inputClass } id={ id } type={ typ } name={ name } value={ defaultValue } hx-preserve/>
+	</div>
 }

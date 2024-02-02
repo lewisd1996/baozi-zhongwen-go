@@ -2,17 +2,12 @@ package home
 
 import (
 	"github.com/lewisd1996/baozi-zhongwen/view/layout"
-	"github.com/lewisd1996/baozi-zhongwen/view/components"
 )
 
-templ Show(hanzi string, pinyin string, english string, hskLevel int) {
-	@layout.Base(true, true) {
-		<div class="container mx-auto flex flex-1 flex-col flex-wrap items-center justify-center">
-			<h1 class="text-slate-50 mb-6 font-semibold text-center text-lg lg:text-4xl">Random HSK Vocab Picker</h1>
-			@components.VocabCard(hanzi, pinyin, english, hskLevel)
-			<button class="rounded-md bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-950 shadow-sm mt-8" hx-get="/vocab" hx-trigger="click, keyup[code=='Space'] from:body" hx-target="#vocab" hx-swap="outerHTML swap:0.25s" type="button">
-				Swap
-			</button>
+templ Show(route string) {
+	@layout.Base(route, true) {
+		<div class="flex flex-1 flex-col flex-wrap items-center justify-center">
+			<h1 class="text-slate-900 mb-6 font-semibold text-center text-lg lg:text-4xl">Home</h1>
 		</div>
 	}
 }
