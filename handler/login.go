@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -43,8 +44,8 @@ func (h LoginHandler) HandleLoginSubmit(c echo.Context) error {
 	accessTokenCookie := http.Cookie{
 		Name:     "access_token",
 		Value:    *authResult.AccessToken,
-		Path:     "/",         // available to all paths
-		Domain:   "localhost", // adjust as per your domain, might omit for localhost
+		Path:     "/",                                // available to all paths
+		Domain:   os.Getenv("RAILWAY_PUBLIC_DOMAIN"), // set your domain here (e.g. localhost, myapp.com, etc.)
 		HttpOnly: true,
 		Secure:   true, // consider the environment, as mentioned above
 		// SameSite: http.SameSiteLaxMode, // Uncomment if necessary
@@ -56,7 +57,7 @@ func (h LoginHandler) HandleLoginSubmit(c echo.Context) error {
 		Name:     "refresh_token",
 		Value:    *authResult.RefreshToken, // Set your refresh token here
 		Path:     "/",
-		Domain:   "localhost",
+		Domain:   os.Getenv("RAILWAY_PUBLIC_DOMAIN"),   // set your domain here (e.g. localhost, myapp.com, etc.)
 		Expires:  time.Now().Add(365 * 24 * time.Hour), // 1 year, adjust based on your requirements
 		Secure:   true,
 		HttpOnly: true,
