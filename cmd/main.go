@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
@@ -15,10 +14,10 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("No .env file found")
-		os.Exit(1)
-	}
+	// if err := godotenv.Load(); err != nil {
+	// 	fmt.Println("No .env file found")
+	// 	os.Exit(1)
+	// }
 
 	// Create new app
 	a := app.NewApp()
