@@ -1,5 +1,13 @@
 # Build stage
 FROM golang:1.21 AS build-stage
+
+# GET ARGUMENTS
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_HOST
+ARG POSTGRES_PORT
+ARG POSTGRES_DB
+
 WORKDIR /app
 # Copy go mod and sum files
 COPY go.mod go.sum ./
