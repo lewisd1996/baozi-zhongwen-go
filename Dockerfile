@@ -9,6 +9,10 @@ ARG POSTGRES_PORT
 ARG POSTGRES_DB
 
 WORKDIR /app
+# Install goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
+# Install jet
+RUN go install github.com/go-jet/jet/v2/cmd/jet@latest
 # Copy go mod and sum files
 COPY go.mod go.sum ./
 RUN go mod download
