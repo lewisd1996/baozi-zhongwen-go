@@ -6,6 +6,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 # Copy the rest of the source code
 COPY . /app
+
+# Run migrations and jet
+RUN cd sql/migrations && goose postgres "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" up
+RUN jet -dsn="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" -schema=public -path=./sql/.jet generate
+
 # Build the application
 # Update the build command to target the cmd directory
 RUN CGO_ENABLED=0 GOOS=linux go build -o /entrypoint ./cmd
