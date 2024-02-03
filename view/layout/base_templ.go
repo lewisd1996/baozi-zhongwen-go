@@ -10,9 +10,6 @@ import "context"
 import "io"
 import "bytes"
 
-import "fmt"
-import "github.com/google/uuid"
-
 func Base(route string, showAppShell bool, children ...string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -53,23 +50,7 @@ func Base(route string, showAppShell bool, children ...string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&amp;display=swap\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"/assets/css/tailwind.css\"><link rel=\"stylesheet\" href=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/assets/css/styles.css?bust=%s", uuid.New().String())))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"stylesheet\" href=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/assets/css/custom.css?bust=%s", uuid.New().String())))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative\"><div class=\"flex flex-col min-h-screen\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap\" rel=\"stylesheet\"><link href=\"https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&amp;display=swap\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"/assets/css/tailwind.css\"><link rel=\"stylesheet\" href=\"/assets/css/styles.css\"><link rel=\"stylesheet\" href=\"/assets/css/custom.css\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative\"><div class=\"flex flex-col min-h-screen\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

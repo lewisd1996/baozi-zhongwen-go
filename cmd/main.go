@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
@@ -14,6 +15,11 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("No .env file found")
+		os.Exit(1)
+	}
+
 	// Create new app
 	a := app.NewApp()
 	domain := os.Getenv("RAILWAY_PUBLIC_DOMAIN")
@@ -80,4 +86,20 @@ func main() {
 
 	// Start server
 	a.Router.Start(":3000")
+
+	// Close database connection
+	defer a.DB.Close()
 }
+
+// //TODO: Remove
+// a.Router.GET("/users", func(c echo.Context) error {
+// 	stmt := SELECT(table.User.AllColumns).FROM(table.User.Table)
+// 	var res []User
+// 	err := stmt.Query(a.DB, &res)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return c.String(500, "Error")
+// 	}
+
+// 	return c.JSON(200, res)
+// })

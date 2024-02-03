@@ -1,13 +1,20 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/lewisd1996/baozi-zhongwen/app"
 	"github.com/lewisd1996/baozi-zhongwen/view/auth/confirm"
 	"github.com/lewisd1996/baozi-zhongwen/view/auth/register"
+
+	// dot import so that jet go code would resemble as much as native SQL
+	// dot import is not mandatory
+	. "github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
+	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/table"
 )
 
 type RegisterHandler struct {
@@ -36,6 +43,23 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 		return HTML(c, register.RegisterForm(err))
 	}
 
+	// Create user in database
+	userSub := *authResult.UserSub
+	user := User{
+		ID:    uuid.MustParse(userSub),
+		Email: username,
+	}
+
+	stmt := table.User.INSERT(table.User.ID, table.User.Email).MODEL(user).RETURNING(table.User.AllColumns)
+	res, err := stmt.Exec(h.app.DB)
+
+	if err != nil {
+		log.Println(err)
+		return HTML(c, register.RegisterForm(fmt.Errorf("Failed to create user")))
+	}
+
+	println(res)
+
 	if authResult.UserConfirmed == nil || !*authResult.UserConfirmed {
 		c.Response().Header().Set("HX-Redirect", "/register/confirm?username="+username)
 		return c.NoContent(http.StatusOK)
@@ -47,8 +71,6 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 func (h RegisterHandler) HandleRegisterConfirmSubmit(c echo.Context) error {
 	username := c.FormValue("username")
 	code := c.FormValue("code")
-
-	println("[CONFIRM SUBMIT]:", username, code)
 
 	err := h.app.Auth.Confirm(username, code)
 
@@ -64,11 +86,7 @@ func (h RegisterHandler) HandleRegisterConfirmSubmit(c echo.Context) error {
 
 func (h RegisterHandler) HandleRegisterConfirmResend(c echo.Context) error {
 	username := c.FormValue("username")
-
-	log.Println("[CONFIRM RESEND]:", username)
-
 	err := h.app.Auth.ResendConfirmationCode(username)
-	log.Println("[CONFIRM RESEND ERROR]:", err)
 	if err != nil {
 		return HTML(c, confirm.ConfirmForm(username, err, true))
 	}
