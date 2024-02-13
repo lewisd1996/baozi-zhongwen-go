@@ -51,7 +51,7 @@ func run(
 		fmt.Fprintf(os.Stderr, "server shutdown failed: %s\n", err)
 	}
 
-	defer a.DB.Close()
+	defer a.Dao.DB.Close()
 	return nil
 }
 

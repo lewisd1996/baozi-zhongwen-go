@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"github.com/labstack/echo/v4"
+	"github.com/lewisd1996/baozi-zhongwen/daos"
 	"github.com/lewisd1996/baozi-zhongwen/service"
 )
 
@@ -18,7 +19,7 @@ type App struct {
 	id     string
 	Router *echo.Echo
 	Auth   *service.AuthService
-	DB     *sql.DB
+	Dao    *daos.Dao
 }
 
 func NewApp() *App {
@@ -54,10 +55,12 @@ func NewApp() *App {
 		panic(err)
 	}
 
+	dao := daos.NewDao(db)
+
 	return &App{
 		id:     "baozi-zhongwen",
 		Router: echo.New(),
 		Auth:   authService,
-		DB:     db,
+		Dao:    dao,
 	}
 }

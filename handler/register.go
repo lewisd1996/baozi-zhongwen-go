@@ -10,11 +10,6 @@ import (
 	"github.com/lewisd1996/baozi-zhongwen/app"
 	"github.com/lewisd1996/baozi-zhongwen/view/auth/confirm"
 	"github.com/lewisd1996/baozi-zhongwen/view/auth/register"
-
-	// dot import so that jet go code would resemble as much as native SQL
-	// dot import is not mandatory
-	. "github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
-	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/table"
 )
 
 type RegisterHandler struct {
@@ -45,13 +40,8 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 
 	// Create user in database
 	userSub := *authResult.UserSub
-	user := User{
-		ID:    uuid.MustParse(userSub),
-		Email: username,
-	}
-
-	stmt := table.User.INSERT(table.User.ID, table.User.Email).MODEL(user).RETURNING(table.User.AllColumns)
-	_, err = stmt.Exec(h.app.DB)
+	userId, err := uuid.Parse(userSub)
+	err = h.app.Dao.CreateUser(username, userId)
 
 	if err != nil {
 		log.Println(err)
