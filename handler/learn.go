@@ -115,13 +115,13 @@ func (h LearnHandler) HandleLearnSessionSummaryShow(c echo.Context) error {
 		return c.Redirect(302, "/decks")
 	}
 
-	learningSession, err := h.app.Dao.GetLearningSessionById(sessionId)
+	learningSession, err := h.app.Dao.GetEndedLearningSessionById(sessionId)
 	if err != nil {
 		println("Error getting learning session:", err.Error())
 		return c.Redirect(302, "/decks")
 	}
-	if learningSession.EndedAt != nil {
-		println("Session ended")
+	if learningSession.EndedAt == nil {
+		println("Session not ended")
 		return c.Redirect(302, "/decks")
 	}
 

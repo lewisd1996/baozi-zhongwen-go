@@ -32,8 +32,25 @@ func (dao *Dao) GetLearningSessionByDeckId(deckId, userId string) (LearningSessi
 	return sessionRes, nil
 }
 
-func (dao *Dao) GetLearningSessionById(sessionId string) (LearningSession, error) {
+func (dao *Dao) GetActiveLearningSessionById(sessionId string) (LearningSession, error) {
 	stmt := table.LearningSession.SELECT(table.LearningSession.AllColumns).WHERE(table.LearningSession.ID.EQ(UUID(uuid.MustParse(sessionId))).AND(table.LearningSession.EndedAt.IS_NULL())).LIMIT(1)
+	debugSql := stmt.DebugSql()
+	log.Println(debugSql)
+	var sessionRes LearningSession
+	err := stmt.Query(dao.DB, &sessionRes)
+
+	if err != nil {
+		log.Println("Error getting learning session:", err.Error())
+		return LearningSession{}, err
+	}
+
+	return sessionRes, nil
+}
+
+func (dao *Dao) GetEndedLearningSessionById(sessionId string) (LearningSession, error) {
+	stmt := table.LearningSession.SELECT(table.LearningSession.AllColumns).WHERE(table.LearningSession.ID.EQ(UUID(uuid.MustParse(sessionId))).AND(table.LearningSession.EndedAt.IS_NOT_NULL())).LIMIT(1)
+	debugSql := stmt.DebugSql()
+	log.Println(debugSql)
 	var sessionRes LearningSession
 	err := stmt.Query(dao.DB, &sessionRes)
 
@@ -152,7 +169,7 @@ func (dao *Dao) GetCardLearningProgress(cardId, sessionId, userId string) (CardL
 // TODO: Refactor, too many responsibilities
 func (dao *Dao) UpdateCardLearningProgress(ctx context.Context, cardId string, isCorrect bool, sessionId, userId string) (LearningSession, error) {
 	// Get learning session
-	learningSession, err := dao.GetLearningSessionById(sessionId)
+	learningSession, err := dao.GetActiveLearningSessionById(sessionId)
 
 	if err != nil {
 		println("Error getting learning session:", err.Error())
