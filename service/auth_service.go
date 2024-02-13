@@ -151,8 +151,8 @@ func (service *AuthService) ResendConfirmationCode(username string) error {
 
 func (service *AuthService) ValidateToken(accessToken string) (jwt.Token, error) {
 	token, err := jwt.ParseString(accessToken, jwt.WithKeySet(service.jwkSet), jwt.WithAcceptableSkew(1*time.Minute))
-
 	if err != nil {
+		println("error parsing token:", err.Error())
 		return nil, err
 	}
 
@@ -172,6 +172,7 @@ func (service *AuthService) RefreshToken(refreshToken string) (*cognitoidentityp
 	if err != nil {
 		return nil, err
 	}
+
 	return result.AuthenticationResult, nil
 }
 

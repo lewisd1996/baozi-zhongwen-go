@@ -1,3 +1,6 @@
+start:
+	@export APP_ENV=development && air
+
 run: 
 	@templ generate
 	@cd internal/tailwind && npm run build

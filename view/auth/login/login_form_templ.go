@@ -29,15 +29,15 @@ func LoginForm(errorMessage error) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input("w-full", "", "loginUsernameInput", "w-full", "email", "username", "Email").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Input("w-full", "", "loginUsernameInput", "w-full", "email", "username", "Email", "", true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input("w-full", "", "loginPasswordInput", "w-full", "password", "password", "Password").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Input("w-full", "", "loginPasswordInput", "w-full", "password", "password", "Password", "", true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Button("w-full", "login", "Login", "submit", true).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Button("w-full", "login", "Login", "", "submit", true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

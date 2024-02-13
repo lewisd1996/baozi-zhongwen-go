@@ -1,104 +1,80 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"os/signal"
 	"time"
 
-	"github.com/labstack/echo/v4"
+	"github.com/joho/godotenv"
 
-	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/lewisd1996/baozi-zhongwen/app"
-	"github.com/lewisd1996/baozi-zhongwen/handler"
-	"github.com/lewisd1996/baozi-zhongwen/middleware"
+	"github.com/lewisd1996/baozi-zhongwen/config"
 )
 
-func main() {
-	// if err := godotenv.Load(); err != nil {
-	// 	fmt.Println("No .env file found")
-	// 	os.Exit(1)
-	// }
+func run(
+	ctx context.Context,
+	getenv func(string) string,
+	stdout, stderr io.Writer,
+	args []string,
+) error {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
-	// Create new app
+	domain := os.Getenv("DOMAIN")
+
+	// 🚀 Initialize app
 	a := app.NewApp()
-	domain := os.Getenv("RAILWAY_PUBLIC_DOMAIN")
 
 	// ⚙️ Middleware
-	a.Router.Use(echoMiddleware.LoggerWithConfig(echoMiddleware.LoggerConfig{
-		Format: "time=${time_rfc3339} | method=${method} | uri=${uri} | status=${status} | host=${host}\n",
-	}))
-	a.Router.Use(echoMiddleware.RateLimiter(echoMiddleware.NewRateLimiterMemoryStore(20)))
-	a.Router.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "https://" + domain},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	}))
-	a.Router.Use(echoMiddleware.TimeoutWithConfig(echoMiddleware.TimeoutConfig{
-		Skipper:      echoMiddleware.DefaultSkipper,
-		ErrorMessage: "custom timeout error message returns to client",
-		OnTimeoutRouteErrorHandler: func(err error, c echo.Context) {
-			fmt.Println("custom timeout error handler")
-		},
-		Timeout: 30 * time.Second,
-	}))
+	config.AddMiddleware(a, domain)
 
-	// 🗄️ Static assets
-	a.Router.Static("/assets", "assets")
+	// 📡 Routes
+	config.AddRoutes(a.Router, a)
 
-	// 📡 API (V1)
-	v1 := a.Router.Group("/v1")
-	// ├── Health
-	v1.GET("/health", func(c echo.Context) error {
-		return c.String(200, "OK")
-	})
-	// ├── Auth
-	// │   ├── Login
-	LoginHandler := handler.NewLoginHandler(a)
-	v1.POST("/login", LoginHandler.HandleLoginSubmit)
-	// │   ├── Logout
-	LogoutHandler := handler.NewLogoutHandler(a)
-	v1.POST("/logout", LogoutHandler.HandleLogoutSubmit)
-	// │   ├── Register
-	RegisterHandler := handler.NewRegisterHandler(a)
-	v1.POST("/register", RegisterHandler.HandleRegisterSubmit)
-	v1.POST("/register/confirm", RegisterHandler.HandleRegisterConfirmSubmit)
-	v1.POST("/register/confirm/resend", RegisterHandler.HandleRegisterConfirmResend)
+	go func() {
+		if err := a.Router.Start(":3000"); err != nil && err != http.ErrServerClosed {
+			fmt.Fprintf(os.Stderr, "server failed to start: %s\n", err)
+			os.Exit(1)
+		}
+	}()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
 
-	// 📱 App
-	ag := a.Router.Group("", func(next echo.HandlerFunc) echo.HandlerFunc {
-		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
-	})
-	// 🔓 Unauthenticated routes
-	// ├── Auth
-	// │   ├── Login
-	a.Router.GET("/login", LoginHandler.HandleLoginShow)
-	// │   ├── Register
-	a.Router.GET("/register", RegisterHandler.HandleRegisterShow)
-	a.Router.GET("/register/confirm", RegisterHandler.HandleRegisterConfirmShow)
+	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := a.Router.Shutdown(ctx); err != nil {
+		fmt.Fprintf(os.Stderr, "server shutdown failed: %s\n", err)
+	}
 
-	// 🔒 Authenticated routes
-	// ├── Home
-	HomeHandler := handler.NewHomeHandler()
-	ag.GET("/", HomeHandler.HandleHomeShow)
-	// ├── Decks
-	DecksHandler := handler.NewDecksHandler()
-	ag.GET("/decks", DecksHandler.HandleDecksShow)
-
-	// Start server
-	a.Router.Start(":3000")
-
-	// Close database connection
 	defer a.DB.Close()
+	return nil
 }
 
-// //TODO: Remove
-// a.Router.GET("/users", func(c echo.Context) error {
-// 	stmt := SELECT(table.User.AllColumns).FROM(table.User.Table)
-// 	var res []User
-// 	err := stmt.Query(a.DB, &res)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return c.String(500, "Error")
-// 	}
+func main() {
+	ctx := context.Background()
 
-// 	return c.JSON(200, res)
-// })
+	appEnv := os.Getenv("APP_ENV")
+
+	if appEnv == "development" {
+		if err := godotenv.Load(); err != nil {
+			fmt.Println("No .env file found")
+			os.Exit(1)
+		}
+	}
+
+	if err := run(
+		ctx,
+		os.Getenv,
+		os.Stdout,
+		os.Stderr,
+		os.Args,
+	); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		os.Exit(1)
+	}
+}

@@ -37,11 +37,11 @@ func ConfirmForm(username string, errorMessage error, codeResent bool) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input("w-full", "", "confirmCodeInput", "w-full", "code", "code", "Confirmation Code").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Input("w-full", "", "confirmCodeInput", "w-full", "code", "code", "Confirmation Code", "", true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Button("w-full", "submit", "Submit", "submit", true).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Button("w-full", "submit", "Submit", "", "submit", true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

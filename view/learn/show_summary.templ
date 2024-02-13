@@ -1,0 +1,61 @@
+package learn
+
+import (
+	"strconv"
+
+	"github.com/lewisd1996/baozi-zhongwen/view/layout"
+	. "github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
+	"github.com/lewisd1996/baozi-zhongwen/view/components"
+)
+
+type SessionCard struct {
+	CardLearningProgress
+	Card
+}
+
+type SummaryState struct {
+	DeckID       string
+	SessionID    string
+	SessionCards []SessionCard
+	EndedAt      string
+}
+
+templ ShowSummary(state SummaryState, userId, route string) {
+	@layout.Base(userId, route, true) {
+		<div class="space-y-6">
+			<div class="space-y-1">
+				<h1 class="text-slate-900 font-semibold text-lg lg:text-xl">Summary</h1>
+				<p class="text-slate-600">Completed on { state.EndedAt }</p>
+			</div>
+			<ul class="gap-2 grid lg:grid-cols-2">
+				for _, sessionCard := range state.SessionCards {
+					@SummaryCardStat(sessionCard)
+				}
+			</ul>
+			<div class="flex justify-end w-full">
+				<a href={ templ.SafeURL("/decks/" + state.DeckID) } class="bg-teal-900 text-slate-50 rounded-full py-2 px-4">View Deck</a>
+			</div>
+		</div>
+	}
+}
+
+templ SummaryCardStat(card SessionCard) {
+	<li class="flex p-4 bg-white rounded-lg">
+		<div class="flex space-x-2 flex-1">
+			<p>{ card.Content }</p>
+			<p>{ card.Translation }</p>
+		</div>
+		<div class="flex items-center flex-1 space-x-2">
+			<p>{ calculateSuccessRate(card.ReviewCount, card.SuccessCount) + "%" }</p>
+			@components.ProgressBar("10", calculateSuccessRate(card.ReviewCount, card.SuccessCount))
+		</div>
+	</li>
+}
+
+func calculateSuccessRate(reviewCount, successCount int32) string {
+	if reviewCount == 0 {
+		return "0"
+	}
+	rate := float64(successCount) / float64(reviewCount) * 100
+	return strconv.Itoa(int(rate))
+}

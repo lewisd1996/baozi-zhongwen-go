@@ -1,6 +1,6 @@
 package components;
 
-templ ProfileMenu() {
+templ ProfileMenu(userId string) {
 	<div
 		x-data="{
         dropdownOpen: false
@@ -10,7 +10,7 @@ templ ProfileMenu() {
 		<button @click="dropdownOpen=true" class="flex items-center w-full gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-slate-900 hover:bg-slate-200">
 			<img class="h-8 w-8 rounded-full bg-slate-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
 			<span class="sr-only">Your profile</span>
-			<span aria-hidden="true">Tom Cook</span>
+			<span aria-hidden="true">{ userId }</span>
 		</button>
 		<div
 			x-show="dropdownOpen"

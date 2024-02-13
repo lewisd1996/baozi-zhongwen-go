@@ -11,8 +11,9 @@ import "io"
 import "bytes"
 
 import "github.com/lewisd1996/baozi-zhongwen/view/icons"
+import "strings"
 
-func Navigation(route string) templ.Component {
+func Navigation(userId, route string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -25,7 +26,7 @@ func Navigation(route string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = DesktopNav(route).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = DesktopNav(userId, route).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -40,7 +41,7 @@ func Navigation(route string) templ.Component {
 	})
 }
 
-func DesktopNav(route string) templ.Component {
+func DesktopNav(userId, route string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -94,7 +95,7 @@ func DesktopNav(route string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 = []any{templ.KV("bg-slate-200 text-slate-900", route == "/decks"), "text-slate-400 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"}
+		var templ_7745c5c3_Var5 = []any{templ.KV("bg-slate-200 text-slate-900", strings.Contains(route, "/decks")), "text-slate-400 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -111,7 +112,7 @@ func DesktopNav(route string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if route == "/decks" {
+		if strings.Contains(route, "/decks") {
 			templ_7745c5c3_Err = icons.DecksIcon("w-5 h-5 text-slate-900").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -131,7 +132,7 @@ func DesktopNav(route string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ProfileMenu().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ProfileMenu(userId).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

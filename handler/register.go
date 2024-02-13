@@ -51,14 +51,12 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 	}
 
 	stmt := table.User.INSERT(table.User.ID, table.User.Email).MODEL(user).RETURNING(table.User.AllColumns)
-	res, err := stmt.Exec(h.app.DB)
+	_, err = stmt.Exec(h.app.DB)
 
 	if err != nil {
 		log.Println(err)
 		return HTML(c, register.RegisterForm(fmt.Errorf("Failed to create user")))
 	}
-
-	println(res)
 
 	if authResult.UserConfirmed == nil || !*authResult.UserConfirmed {
 		c.Response().Header().Set("HX-Redirect", "/register/confirm?username="+username)

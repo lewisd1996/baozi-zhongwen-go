@@ -13,5 +13,6 @@ func NewHomeHandler() HomeHandler {
 }
 
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
-	return Render(c, home.Show(c.Path()))
+	userId := c.Get("user_id").(string)
+	return Render(c, home.Show(userId, c.Path()))
 }

@@ -1,0 +1,17 @@
+package decks
+
+import "github.com/lewisd1996/baozi-zhongwen/view/components"
+import "github.com/google/uuid"
+
+templ CreateCardForm(deckId uuid.UUID, errorMessage error) {
+	<form class="flex space-x-2" hx-post={ "/v1/decks/" + deckId.String() + "/cards" } hx-swap="beforeend" hx-target="#deckTable" hx-on::after-request=" if(event.detail.successful) this.reset()">
+		@components.Input("w-full", "", "createCardContentInput", "w-full", "text", "content", "Content", "苹果", false)
+		@components.Input("w-full", "", "createCardTranslationInput", "w-full", "text", "translation", "Translation", "Apple", false)
+		<div class="pt-6 flex justify-center items-center">
+			@components.Button("shrink rounded-full h-full px-5 bg-teal-600 text-white", "createCard", "Add", "", "submit", false)
+		</div>
+		if errorMessage != nil {
+			<p class="text-red-500 text-center">{ errorMessage.Error() }</p>
+		}
+	</form>
+}

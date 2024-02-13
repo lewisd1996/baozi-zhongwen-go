@@ -5,8 +5,8 @@ import "github.com/lewisd1996/baozi-zhongwen/view/components"
 templ ConfirmForm(username string, errorMessage error, codeResent bool) {
 	<form class="space-y-6 flex flex-col" hx-post="/v1/register/confirm" hx-swap="outerHTML">
 		<input type="hidden" name="username" id="username" value={ username }/>
-		@components.Input("w-full", "", "confirmCodeInput", "w-full", "code", "code", "Confirmation Code")
-		@components.Button("w-full", "submit", "Submit", "submit", true)
+		@components.Input("w-full", "", "confirmCodeInput", "w-full", "code", "code", "Confirmation Code", "", true)
+		@components.Button("w-full", "submit", "Submit", "", "submit", true)
 		if errorMessage != nil {
 			<p class="text-red-500 text-center">{ errorMessage.Error() }</p>
 		}

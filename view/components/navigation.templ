@@ -1,13 +1,14 @@
 package components
 
 import "github.com/lewisd1996/baozi-zhongwen/view/icons"
+import "strings"
 
-templ Navigation(route string) {
-	@DesktopNav(route)
+templ Navigation(userId, route string) {
+	@DesktopNav(userId, route)
 	@MobileNav()
 }
 
-templ DesktopNav(route string) {
+templ DesktopNav(userId, route string) {
 	<div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-52 lg:flex-col">
 		<div class="flex grow pt-6 flex-col gap-y-5 overflow-y-auto border-r border-slate-200 px-6">
 			<a class="flex items-center" href="/">
@@ -30,8 +31,8 @@ templ DesktopNav(route string) {
 								</a>
 							</li>
 							<li>
-								<a href="/decks" class={ templ.KV("bg-slate-200 text-slate-900", route == "/decks"), "text-slate-400 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" }>
-									if route == "/decks" {
+								<a href="/decks" class={ templ.KV("bg-slate-200 text-slate-900", strings.Contains(route, "/decks")), "text-slate-400 group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" }>
+									if strings.Contains(route, "/decks") {
 										@icons.DecksIcon("w-5 h-5 text-slate-900")
 									} else {
 										@icons.DecksIcon("w-5 h-5 text-slate-400")
@@ -42,7 +43,7 @@ templ DesktopNav(route string) {
 						</ul>
 					</li>
 					<li class="-mx-6 mt-auto">
-						@ProfileMenu()
+						@ProfileMenu(userId)
 					</li>
 				</ul>
 			</nav>

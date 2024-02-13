@@ -1,0 +1,14 @@
+package decks
+
+import "github.com/lewisd1996/baozi-zhongwen/view/components"
+
+templ CreateDeckForm(errorMessage error) {
+	<form class="space-y-6 flex flex-col" hx-post="/v1/decks" hx-swap="outerHTML">
+		@components.Input("w-full", "", "createDeckNameInput", "w-full", "text", "name", "Name", "Business Chinese", true)
+		@components.TextArea("w-full", "", "createDeckDescriptionInput", "w-full", "description", "Description", "A deck for learning business Chinese")
+		@components.Button("w-full", "createDeck", "Create", "", "submit", true)
+		if errorMessage != nil {
+			<p class="text-red-500 text-center">{ errorMessage.Error() }</p>
+		}
+	</form>
+}

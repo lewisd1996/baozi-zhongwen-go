@@ -1,0 +1,27 @@
+package components
+
+templ TextArea(containerClass, defaultValue, id, inputClass, name, labelText, placeholder string) {
+	<div class={ containerClass }>
+		<label class="block text-sm font-medium text-slate-600">{ labelText }</label>
+		<div class="w-full mx-auto">
+			<textarea
+				x-data="{ 
+                resize () { 
+                    $el.style.height = '0px'; 
+                    $el.style.height = $el.scrollHeight + 'px' 
+                } 
+            }"
+				x-init="resize()"
+				@input="resize()"
+				type="text"
+				placeholder={ placeholder }
+				class={ inputClass, "flex w-full h-auto min-h-[80px] px-3 py-2 mt-1 rounded-lg border border-slate-300 bg-white shadow shadow-black/5 ring-offset-background placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50" }
+				id={ id }
+				name={ name }
+				value={ defaultValue }
+				placeholder={ placeholder }
+				hx-preserve
+			></textarea>
+		</div>
+	</div>
+}

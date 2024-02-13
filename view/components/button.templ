@@ -1,8 +1,8 @@
 package components
 
-templ Button(class, id, text, inputType string, isPrimary bool) {
-	<button class={ "rounded-full px-6 py-3.5", templ.KV("bg-teal-900 text-slate-50", isPrimary), class } hx-indicator={ id + "-indicator" } type={ inputType }>
+templ Button(class, id, text, textClass, inputType string, isPrimary bool) {
+	<button class={ templ.KV("bg-teal-900 text-slate-50 rounded-full px-6 py-3.5", isPrimary), class } hx-indicator={ id + "-indicator" } type={ inputType }>
 		@ActivityIndicator(id + "-indicator")
-		<span class="button-text">{ text }</span>
+		<span class={ "button-text", textClass }>{ text }</span>
 	</button>
 }
