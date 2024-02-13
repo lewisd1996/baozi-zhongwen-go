@@ -38,7 +38,7 @@ func (dao *Dao) GetLearningSessionById(sessionId string) (LearningSession, error
 	err := stmt.Query(dao.DB, &sessionRes)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("Error getting learning session:", err.Error())
 		return LearningSession{}, err
 	}
 
@@ -71,8 +71,6 @@ func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string
 
 	// Get 4 cards to start learning session
 	newSessionCardsStmt := table.Card.SELECT(table.Card.AllColumns, table.CardLearningProgress.LastReviewedAt).FROM(table.Card.LEFT_JOIN(table.CardLearningProgress, table.CardLearningProgress.CardID.EQ(table.Card.ID))).WHERE(table.Card.DeckID.EQ(UUID(uuid.MustParse(deckId)))).ORDER_BY(table.CardLearningProgress.LastReviewedAt.DESC()).LIMIT(4)
-	debugQuery := newSessionCardsStmt.DebugSql()
-	println("Debug query:", debugQuery)
 	err = newSessionCardsStmt.QueryContext(ctx, tx, &cards)
 	if err != nil {
 		println("Error getting cards:", err.Error())
@@ -120,20 +118,18 @@ func (dao *Dao) GetNextLearningSessionCard(sessionId, userId string) (CardWithLe
 	return nextCardDest, nil
 }
 
-func (dao *Dao) GetLearningSessionIncorrectOptions(nextCardId, sessionId, userId string) ([]learn.LearnOption, error) {
+func (dao *Dao) GetLearningSessionIncorrectOptions(nextCardId, sessionId, userId uuid.UUID) ([]learn.LearnOption, error) {
 	// Get 3 other cards to be incorrect options
 	var incorrectCardsDest []CardWithLearningProgress
-	incorrectCardsStmt := table.CardLearningProgress.SELECT(table.CardLearningProgress.AllColumns, table.Card.Content, table.Card.Translation).FROM(table.CardLearningProgress.INNER_JOIN(table.Card, table.Card.ID.EQ(table.CardLearningProgress.CardID))).WHERE(table.CardLearningProgress.SessionID.EQ(UUID(uuid.MustParse(sessionId))).AND(table.CardLearningProgress.UserID.EQ(UUID(uuid.MustParse(userId)))).AND(table.CardLearningProgress.CardID.NOT_EQ(UUID(uuid.MustParse(nextCardId))))).LIMIT(3)
+	incorrectCardsStmt := table.CardLearningProgress.SELECT(table.CardLearningProgress.AllColumns, table.Card.Content, table.Card.Translation).FROM(table.CardLearningProgress.INNER_JOIN(table.Card, table.Card.ID.EQ(table.CardLearningProgress.CardID))).WHERE(table.CardLearningProgress.SessionID.EQ(UUID(sessionId)).AND(table.CardLearningProgress.UserID.EQ(UUID(userId))).AND(table.CardLearningProgress.CardID.NOT_EQ(UUID(nextCardId)))).LIMIT(3)
 	err := incorrectCardsStmt.Query(dao.DB, &incorrectCardsDest)
 	if err != nil {
-		println("Error in incorrectCardsStmt:", err.Error())
+		log.Println("Error getting incorrect cards:", err.Error())
 		return nil, err
 	}
-	println("Incorrect cards count:", len(incorrectCardsDest))
 
 	var options []learn.LearnOption
 	for _, card := range incorrectCardsDest {
-		fmt.Println("Incorrect card:", card.Card.Content, card.Card.Translation)
 		options = append(options, learn.LearnOption{Translation: card.Card.Translation, Correct: false})
 	}
 
@@ -153,7 +149,7 @@ func (dao *Dao) GetCardLearningProgress(cardId, sessionId, userId string) (CardL
 	return cardLearningProgress, nil
 }
 
-// TODO: Refactor
+// TODO: Refactor, too many responsibilities
 func (dao *Dao) UpdateCardLearningProgress(ctx context.Context, cardId string, isCorrect bool, sessionId, userId string) (LearningSession, error) {
 	// Get learning session
 	learningSession, err := dao.GetLearningSessionById(sessionId)

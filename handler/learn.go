@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/lewisd1996/baozi-zhongwen/app"
 	"github.com/lewisd1996/baozi-zhongwen/view/learn"
@@ -26,7 +27,7 @@ func (h LearnHandler) HandleLearnShow(c echo.Context) error {
 		return c.Redirect(302, "/decks")
 	}
 
-	learningSession, err := h.app.Dao.GetLearningSessionById(deckId)
+	learningSession, err := h.app.Dao.GetLearningSessionByDeckId(deckId, userId)
 
 	if err != nil {
 		// If no learning session exists, create one
@@ -50,7 +51,10 @@ func (h LearnHandler) HandleLearnShow(c echo.Context) error {
 	}
 
 	// Get 3 other cards to be incorrect options
-	incorrectOptions, err := h.app.Dao.GetLearningSessionIncorrectOptions(learningSession.ID.String(), userId, nextCard.Card.ID.String())
+	incorrectOptions, err := h.app.Dao.GetLearningSessionIncorrectOptions(nextCard.CardLearningProgress.CardID, learningSession.ID, uuid.MustParse(userId))
+	for i := range incorrectOptions {
+		println("Incorrect option:", incorrectOptions[i].Translation)
+	}
 
 	var options []learn.LearnOption
 	options = append(incorrectOptions, learn.LearnOption{Translation: nextCard.Translation, Correct: true})
