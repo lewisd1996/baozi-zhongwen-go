@@ -1,8 +1,12 @@
+![cover](./assets/img/cover.jpg)
+
 # Dumpling Chinese (Baozi Zhongwen/包子中文)
 
 __🚧 Note: This is a WIP 🚧__
 
 A web app for learners of Mandarin Chinese.
+
+## Overview
 
 This Golang application uses the following:
 
@@ -17,7 +21,6 @@ This Golang application uses the following:
 - [Postgres](https://www.postgresql.org/)
 
 ## Feature list
-
 ### Auth
 - [X] Login
 - [X] Register

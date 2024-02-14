@@ -84,8 +84,12 @@ func (dao *Dao) GetUserCardCount(userId string) (int, error) {
 		Count int
 	}
 	err := stmt.Query(dao.DB, &res)
+
 	if err != nil {
-		log.Println(err)
+		// TODO: Handle this better
+		if err.Error() == "qrm: no rows in result set" {
+			return 0, nil
+		}
 		return 0, err
 	}
 	return res.Count, nil

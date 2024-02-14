@@ -72,7 +72,7 @@ func (dao *Dao) GetUserDeckCount(userId string) (int, error) {
 	}
 	err := stmt.Query(dao.DB, &res)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error getting user deck count:", err)
 		return 0, err
 	}
 	return res.Count, nil

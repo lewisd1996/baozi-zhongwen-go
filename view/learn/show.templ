@@ -43,13 +43,13 @@ templ LearnCard(state LearnState) {
 
 templ LearnCardOption(cardId string, option LearnOption, sessionId string) {
 	if option.Correct {
-		<div @click="show = true;" class="flex flex-col items-center justify-center w-full">
+		<div @click="show = true;" class="flex hover:cursor-pointer flex-col items-center justify-center w-full">
 			<button hx-post={ fmt.Sprintf("/v1/learn/%s?card_id=%s&correct=%s", sessionId, cardId, "true") } hx-trigger="click delay:1250ms" :class="{ 'bg-teal-200': show, 'bg-slate-200': !show }" class="flex rounded-lg duration-150 w-full justify-center items-center p-8">
 				{ option.Translation }
 			</button>
 		</div>
 	} else {
-		<div @click="show = true;" class="flex flex-col items-center justify-center w-full">
+		<div @click="show = true;" class="flex hover:cursor-pointer flex-col items-center justify-center w-full">
 			<button hx-post={ fmt.Sprintf("/v1/learn/%s?card_id=%s&correct=%s", sessionId, cardId, "false") } hx-trigger="click delay:1250ms" :class="{ 'bg-red-200 opacity-50': show, 'bg-slate-200': !show }" class="flex rounded-lg transition-all duration-150 ease-in-out w-full justify-center items-center p-8">
 				{ option.Translation }
 			</button>

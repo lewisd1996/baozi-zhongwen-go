@@ -27,35 +27,30 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 
 	var wg sync.WaitGroup
 	var totalDecks, totalCards, totalCompletedLearningSessions int
-	var err error
+	var errDeck, errCard, errSession error
 
 	wg.Add(3)
 
 	go func() {
 		defer wg.Done()
-		totalDecks, err = h.app.Dao.GetUserDeckCount(userId)
-		if err != nil {
-			return
-		}
+		totalDecks, errDeck = h.app.Dao.GetUserDeckCount(userId)
 	}()
 
 	go func() {
 		defer wg.Done()
-		totalCards, err = h.app.Dao.GetUserCardCount(userId)
-		if err != nil {
-			return
-		}
+		totalCards, errCard = h.app.Dao.GetUserCardCount(userId)
 	}()
 
 	go func() {
 		defer wg.Done()
-		totalCompletedLearningSessions, err = h.app.Dao.GetUserCompletedLearningSessionCount(userId)
-		if err != nil {
-			return
-		}
+		totalCompletedLearningSessions, errSession = h.app.Dao.GetUserCompletedLearningSessionCount(userId)
 	}()
 
 	wg.Wait()
+
+	if errDeck != nil || errCard != nil || errSession != nil {
+		return c.Redirect(302, "/decks")
+	}
 
 	stats := []home.Stat{
 		{

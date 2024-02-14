@@ -150,7 +150,7 @@ func LearnCardOption(cardId string, option LearnOption, sessionId string) templ.
 		}
 		ctx = templ.ClearChildren(ctx)
 		if option.Correct {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div @click=\"show = true;\" class=\"flex flex-col items-center justify-center w-full\"><button hx-post=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div @click=\"show = true;\" class=\"flex hover:cursor-pointer flex-col items-center justify-center w-full\"><button hx-post=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -176,7 +176,7 @@ func LearnCardOption(cardId string, option LearnOption, sessionId string) templ.
 				return templ_7745c5c3_Err
 			}
 		} else {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div @click=\"show = true;\" class=\"flex flex-col items-center justify-center w-full\"><button hx-post=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div @click=\"show = true;\" class=\"flex hover:cursor-pointer flex-col items-center justify-center w-full\"><button hx-post=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
