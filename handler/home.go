@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"sync"
+
 	"github.com/labstack/echo/v4"
 	"github.com/lewisd1996/baozi-zhongwen/app"
 	"github.com/lewisd1996/baozi-zhongwen/view/home"
@@ -23,20 +25,37 @@ func NewHomeHandler(a *app.App) HomeHandler {
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	userId := c.Get("user_id").(string)
 
-	totalDecks, err := h.app.Dao.GetUserDeckCount(userId)
-	if err != nil {
-		return err
-	}
+	var wg sync.WaitGroup
+	var totalDecks, totalCards, totalCompletedLearningSessions int
+	var err error
 
-	totalCards, err := h.app.Dao.GetUserCardCount(userId)
-	if err != nil {
-		return err
-	}
+	wg.Add(3)
 
-	totalCompletedLearningSessions, err := h.app.Dao.GetUserCompletedLearningSessionCount(userId)
-	if err != nil {
-		return err
-	}
+	go func() {
+		defer wg.Done()
+		totalDecks, err = h.app.Dao.GetUserDeckCount(userId)
+		if err != nil {
+			return
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		totalCards, err = h.app.Dao.GetUserCardCount(userId)
+		if err != nil {
+			return
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		totalCompletedLearningSessions, err = h.app.Dao.GetUserCompletedLearningSessionCount(userId)
+		if err != nil {
+			return
+		}
+	}()
+
+	wg.Wait()
 
 	stats := []home.Stat{
 		{
