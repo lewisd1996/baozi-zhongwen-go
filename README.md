@@ -1,8 +1,20 @@
 # Dumpling Chinese (Baozi Zhongwen/包子中文)
 
-__🚧 Note: This is a WIP.__
+__🚧 Note: This is a WIP 🚧__
 
 A web app for learners of Mandarin Chinese.
+
+This Golang application uses the following:
+
+- [Echo](https://echo.labstack.com/)
+- [Goose](https://github.com/pressly/goose)
+- [Jet](https://github.com/go-jet/jet)
+- [Templ](https://github.com/a-h/templ)
+- [HTMX](https://htmx.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Alpine.js](https://alpinejs.dev/start-here)
+- [Docker](https://www.docker.com/)
+- [Postgres](https://www.postgresql.org/)
 
 ## Feature list
 
@@ -13,13 +25,15 @@ A web app for learners of Mandarin Chinese.
 - [ ] Forgot password
 
 ### Decks
-- [ ] Create deck
-- [ ] View deck
-- [ ] Edit deck
+- [X] Create deck
+- [X] View deck
+- [X] Edit deck
 
 ### Cards
-- [ ] Add card to deck
-- [ ] Edit card
+- [X] Add card to deck
+- [X] Edit card
+- [ ] Delete cards
 
 ### Study
-- [ ] Complete study session
+- [X] Complete study session
+- [X] View study session summaries
