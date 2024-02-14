@@ -22,7 +22,6 @@ type LearnOption struct {
 templ Show(userId, route string, state LearnState) {
 	@layout.Base(userId, route, true) {
 		<div class="flex flex-1 flex-col flex-wrap items-center justify-center">
-			<p>{ state.SessionID } </p>
 			@LearnCard(state)
 		</div>
 	}

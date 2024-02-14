@@ -11,4 +11,5 @@ package view
 // this method only once at the beginning of the program.
 func UseSchema(schema string) {
 	ActiveLocks = ActiveLocks.FromSchema(schema)
+	VCardWithLastReviewed = VCardWithLastReviewed.FromSchema(schema)
 }

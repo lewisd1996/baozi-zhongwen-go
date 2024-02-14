@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	. "github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
 	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/table"
+	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/view"
 	"github.com/lewisd1996/baozi-zhongwen/view/learn"
 )
 
@@ -63,7 +64,7 @@ func (dao *Dao) GetEndedLearningSessionById(sessionId string) (LearningSession, 
 }
 
 func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string) (LearningSession, error) {
-	var cards []Card
+	var cards []VCardWithLastReviewed
 	var learningSession LearningSession
 
 	// Begin transaction
@@ -87,7 +88,9 @@ func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string
 	}
 
 	// Get 4 cards to start learning session
-	newSessionCardsStmt := table.Card.SELECT(table.Card.AllColumns, table.CardLearningProgress.LastReviewedAt).FROM(table.Card.LEFT_JOIN(table.CardLearningProgress, table.CardLearningProgress.CardID.EQ(table.Card.ID))).WHERE(table.Card.DeckID.EQ(UUID(uuid.MustParse(deckId)))).ORDER_BY(table.CardLearningProgress.LastReviewedAt.DESC()).LIMIT(4)
+	newSessionCardsStmt := view.VCardWithLastReviewed.SELECT(view.VCardWithLastReviewed.AllColumns).WHERE(view.VCardWithLastReviewed.DeckID.EQ(UUID(uuid.MustParse(deckId)))).ORDER_BY(view.VCardWithLastReviewed.LastReviewedAt.ASC()).LIMIT(4)
+	debugSql := newSessionCardsStmt.DebugSql()
+	log.Println(debugSql)
 	err = newSessionCardsStmt.QueryContext(ctx, tx, &cards)
 	if err != nil {
 		println("Error getting cards:", err.Error())
@@ -257,7 +260,7 @@ func (dao *Dao) GetUserCompletedLearningSessionCount(userId string) (int, error)
 	}
 	err := stmt.Query(dao.DB, &res)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error getting user completed learning session count:", err)
 		return 0, err
 	}
 	return res.Count, nil
