@@ -78,7 +78,7 @@ func Base(userId, route string, showAppShell bool, children ...string) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative\"><div class=\"flex flex-col min-h-screen\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -123,7 +123,7 @@ func Base(userId, route string, showAppShell bool, children ...string) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

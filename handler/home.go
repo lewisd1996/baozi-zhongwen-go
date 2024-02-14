@@ -23,31 +23,38 @@ func NewHomeHandler(a *app.App) HomeHandler {
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	userId := c.Get("user_id").(string)
 
-	usersDeckCount, err := h.app.Dao.GetUserDeckCount(userId)
-	usersCardCount, err := h.app.Dao.GetUserCardCount(userId)
-	usersCompletedLearningSessionCount, err := h.app.Dao.GetUserCompletedLearningSessionCount(userId)
-
+	totalDecks, err := h.app.Dao.GetUserDeckCount(userId)
 	if err != nil {
 		return err
 	}
 
-	var stats []home.Stat
+	totalCards, err := h.app.Dao.GetUserCardCount(userId)
+	if err != nil {
+		return err
+	}
 
-	stats = append(stats, home.Stat{
-		Title: "Decks",
-		Href:  "/decks",
-		Value: usersDeckCount,
-	})
-	stats = append(stats, home.Stat{
-		Title: "Cards",
-		Href:  "/decks",
-		Value: usersCardCount,
-	})
-	stats = append(stats, home.Stat{
-		Title: "Completed Learning Sessions",
-		Href:  "/decks",
-		Value: usersCompletedLearningSessionCount,
-	})
+	totalCompletedLearningSessions, err := h.app.Dao.GetUserCompletedLearningSessionCount(userId)
+	if err != nil {
+		return err
+	}
+
+	stats := []home.Stat{
+		{
+			Title: "Decks",
+			Href:  "/decks",
+			Value: totalDecks,
+		},
+		{
+			Title: "Cards",
+			Href:  "/decks",
+			Value: totalCards,
+		},
+		{
+			Title: "Completed Learning Sessions",
+			Href:  "/decks",
+			Value: totalCompletedLearningSessions,
+		},
+	}
 
 	return Render(c, home.Show(userId, c.Path(), stats))
 }

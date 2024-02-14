@@ -25,17 +25,15 @@ templ Base(userId, route string, showAppShell bool, children ...string) {
 			<link rel="icon" type="image/png" href="/assets/img/favicon.png"/>
 		</head>
 		<body class="bg-slate-100 relative">
-			<div class="flex flex-col min-h-screen">
-				@ToastContainer() {
-					if showAppShell {
-						@Shell(userId, route) {
-							{ children... }
-						}
-					} else {
+			@ToastContainer() {
+				if showAppShell {
+					@Shell(userId, route) {
 						{ children... }
 					}
+				} else {
+					{ children... }
 				}
-			</div>
+			}
 		</body>
 	</html>
 }

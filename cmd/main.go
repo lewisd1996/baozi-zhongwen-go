@@ -15,13 +15,16 @@ import (
 	"github.com/lewisd1996/baozi-zhongwen/config"
 )
 
-func run(
-	ctx context.Context,
-	getenv func(string) string,
-	stdout, stderr io.Writer,
-	args []string,
-) error {
-	ctx, cancel := context.WithCancel(ctx)
+type Config struct {
+	ctx    context.Context
+	getenv func(string) string
+	stdout io.Writer
+	stderr io.Writer
+	args   []string
+}
+
+func run(cfg Config) error {
+	ctx, cancel := context.WithCancel(cfg.ctx)
 	defer cancel()
 
 	domain := os.Getenv("DOMAIN")
@@ -56,8 +59,6 @@ func run(
 }
 
 func main() {
-	ctx := context.Background()
-
 	appEnv := os.Getenv("APP_ENV")
 
 	if appEnv == "development" {
@@ -67,13 +68,15 @@ func main() {
 		}
 	}
 
-	if err := run(
-		ctx,
-		os.Getenv,
-		os.Stdout,
-		os.Stderr,
-		os.Args,
-	); err != nil {
+	config := Config{
+		ctx:    context.Background(),
+		getenv: os.Getenv,
+		stdout: os.Stdout,
+		stderr: os.Stderr,
+		args:   os.Args,
+	}
+
+	if err := run(config); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		os.Exit(1)
 	}
