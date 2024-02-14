@@ -21,7 +21,7 @@ func AddRoutes(e *echo.Echo, a *app.App) {
 	// Handlers
 	CardsHandler := handler.NewCardsHandler(a)
 	DecksHandler := handler.NewDecksHandler(a)
-	HomeHandler := handler.NewHomeHandler()
+	HomeHandler := handler.NewHomeHandler(a)
 	LearnHandler := handler.NewLearnHandler(a)
 	LoginHandler := handler.NewLoginHandler(a)
 	LogoutHandler := handler.NewLogoutHandler(a)

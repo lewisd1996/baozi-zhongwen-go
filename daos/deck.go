@@ -64,3 +64,16 @@ func (dao *Dao) DeleteDeck(deckId, ownerId string) error {
 
 	return nil
 }
+
+func (dao *Dao) GetUserDeckCount(userId string) (int, error) {
+	stmt := table.Card.SELECT(COUNT(table.Deck.ID)).FROM(table.Deck).WHERE(table.Deck.OwnerID.EQ(UUID(uuid.MustParse(userId)))).LIMIT(1)
+	var res struct {
+		Count int
+	}
+	err := stmt.Query(dao.DB, &res)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	return res.Count, nil
+}

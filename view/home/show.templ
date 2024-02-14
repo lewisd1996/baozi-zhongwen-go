@@ -4,10 +4,10 @@ import (
 	"github.com/lewisd1996/baozi-zhongwen/view/layout"
 )
 
-templ Show(userId, route string) {
+templ Show(userId, route string, stats []Stat) {
 	@layout.Base(userId, route, true) {
-		<div class="flex flex-1 flex-col flex-wrap items-center justify-center">
-			<h1 class="text-slate-900 mb-6 font-semibold text-center text-lg lg:text-4xl">Home</h1>
+		<div>
+			@Stats(stats)
 		</div>
 	}
 }

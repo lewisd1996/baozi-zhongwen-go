@@ -10,6 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
+import "github.com/lewisd1996/baozi-zhongwen/view/icons"
+
 func ProfileMenu(userId string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -23,7 +25,7 @@ func ProfileMenu(userId string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n        dropdownOpen: false\n    }\" class=\"relative w-full\"><button @click=\"dropdownOpen=true\" class=\"flex items-center w-full gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-slate-900 hover:bg-slate-200\"><img class=\"h-8 w-8 rounded-full bg-slate-50\" src=\"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80\" alt=\"\"> <span class=\"sr-only\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div x-data=\"{\n        dropdownOpen: false\n    }\" class=\"relative w-full\"><button @click=\"dropdownOpen=true\" class=\"flex border-t border-slate-200/70 items-center w-full gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-slate-900 hover:bg-slate-200\"><span class=\"sr-only\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -32,20 +34,24 @@ func ProfileMenu(userId string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> <span aria-hidden=\"true\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(userId)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/profile_menu.templ`, Line: 12, Col: 36}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		templ_7745c5c3_Err = icons.UserIcon("h-5 w-5").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></button><div x-show=\"dropdownOpen\" @click.away=\"dropdownOpen=false\" x-transition:enter=\"ease-out duration-200\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"-translate-y-full\" x-transition:leave=\"ease-in duration-150\" class=\"absolute top-0 z-50 w-full -translate-x-1/2 left-1/2 -translate-y-full\" x-cloak><div class=\"p-1 mt-1 text-sm bg-white border-neutral-200/70 text-neutral-700\"><a hx-post=\"/v1/logout\" hx-swap=\"outerHTML\" @click=\"menuBarOpen=false\" class=\"relative hover:cursor-pointer flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none\"><span>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var3 := `Account`
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></button><div x-show=\"dropdownOpen\" @click.away=\"dropdownOpen=false\" x-transition:enter=\"ease-out duration-200\" x-transition:enter-start=\"opacity-0\" x-transition:enter-end=\"-translate-y-full\" x-transition:leave=\"ease-in duration-150\" class=\"absolute top-0 z-50 w-full -translate-x-1/2 left-1/2 -translate-y-full\" x-cloak><div class=\"p-1 mt-1 text-sm bg-white border-slate-200/70 text-slate-700\"><a hx-post=\"/v1/logout\" hx-swap=\"outerHTML\" @click=\"menuBarOpen=false\" class=\"relative hover:cursor-pointer flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-slate-100 hover:text-slate-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none\"><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

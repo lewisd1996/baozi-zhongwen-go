@@ -23,7 +23,8 @@ type App struct {
 }
 
 func NewApp() *App {
-	// Create new AWS session
+
+	// ☁️ AWS
 	session, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-2"),
 	})
@@ -34,7 +35,7 @@ func NewApp() *App {
 	svc := cognitoidentityprovider.New(session)
 	authService := service.NewAuthService(svc)
 
-	// Create new database connection
+	// 🐘 PostgreSQL
 	pgUser := os.Getenv("POSTGRES_USER")
 	pgPassword := os.Getenv("POSTGRES_PASSWORD")
 	pgHost := os.Getenv("POSTGRES_HOST")

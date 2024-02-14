@@ -77,3 +77,16 @@ func (dao *Dao) GetCardsByDeckId(deckId string) ([]Card, error) {
 
 	return cardsRes, nil
 }
+
+func (dao *Dao) GetUserCardCount(userId string) (int, error) {
+	stmt := table.Card.SELECT(COUNT(table.Card.ID)).FROM(table.Card, table.Deck).WHERE(table.Card.DeckID.EQ(table.Deck.ID).AND(table.Deck.OwnerID.EQ(UUID(uuid.MustParse(userId))))).GROUP_BY(table.Card.DeckID).LIMIT(1)
+	var res struct {
+		Count int
+	}
+	err := stmt.Query(dao.DB, &res)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	return res.Count, nil
+}

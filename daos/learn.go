@@ -249,3 +249,16 @@ func (dao *Dao) GetLearningSessionCards(sessionId string) ([]learn.SessionCard, 
 
 	return cards, nil
 }
+
+func (dao *Dao) GetUserCompletedLearningSessionCount(userId string) (int, error) {
+	stmt := table.LearningSession.SELECT(COUNT(table.LearningSession.ID)).FROM(table.LearningSession).WHERE(table.LearningSession.UserID.EQ(UUID(uuid.MustParse(userId))).AND(table.LearningSession.EndedAt.IS_NOT_NULL())).LIMIT(1)
+	var res struct {
+		Count int
+	}
+	err := stmt.Query(dao.DB, &res)
+	if err != nil {
+		log.Println(err)
+		return 0, err
+	}
+	return res.Count, nil
+}

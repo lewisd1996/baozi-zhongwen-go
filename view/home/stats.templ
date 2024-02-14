@@ -1,0 +1,28 @@
+package home
+
+import "strconv"
+
+type Stat struct {
+	Title string
+	Href  string
+	Value int
+}
+
+templ Stats(stats []Stat) {
+	<div>
+		<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			for _, stat := range stats {
+				@StatsCard(stat.Href, stat.Title, stat.Value)
+			}
+		</ul>
+	</div>
+}
+
+templ StatsCard(href string, title string, value int) {
+	<li class="overflow-hidden rounded-xl border border-slate-900/5 bg-slate-50 hover:border-slate-900/10 hover:cursor-pointer">
+		<a class="flex flex-col p-6 space-y-2" href={ templ.SafeURL(href) }>
+			<div class="text-2xl font-bold leading-6 text-slate-900">{ strconv.Itoa(value) }</div>
+			<div class="text-sm text-slate-600">{ title }</div>
+		</a>
+	</li>
+}
