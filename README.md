@@ -19,6 +19,7 @@ This Golang application uses the following:
 - [Alpine.js](https://alpinejs.dev/start-here)
 - [Docker](https://www.docker.com/)
 - [Postgres](https://www.postgresql.org/)
+- [Testcontainers](https://golang.testcontainers.org/)
 
 ## Feature list
 ### Auth
