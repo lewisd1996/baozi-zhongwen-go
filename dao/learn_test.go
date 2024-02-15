@@ -2,9 +2,11 @@ package dao
 
 import (
 	"context"
+	"slices"
 	"testing"
 
 	"github.com/lewisd1996/baozi-zhongwen/internal/testutils"
+	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
 )
 
 func TestLearnDao(t *testing.T) {
@@ -15,6 +17,7 @@ func TestLearnDao(t *testing.T) {
 
 	t.Run("LearnDao", func(t *testing.T) {
 		var learningSessionId string
+		var card1, card2, card3, card4 model.Card
 
 		t.Run("Should fail to create a learning session when there are < 4 cards in a deck", func(t *testing.T) {
 			_, err := dao.CreateLearningSession(ctx, testutils.TestDeckId, testutils.TestUserId)
@@ -28,19 +31,19 @@ func TestLearnDao(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to create deck: %v", err)
 			}
-			_, err = dao.CreateCard("苹果", "Apple", deck.ID.String())
+			card1, err = dao.CreateCard("苹果", "Apple", deck.ID.String())
 			if err != nil {
 				t.Fatalf("Failed to create card: %v", err)
 			}
-			_, err = dao.CreateCard("橘子", "Orange", deck.ID.String())
+			card2, err = dao.CreateCard("橘子", "Orange", deck.ID.String())
 			if err != nil {
 				t.Fatalf("Failed to create card: %v", err)
 			}
-			_, err = dao.CreateCard("香蕉", "Banana", deck.ID.String())
+			card3, err = dao.CreateCard("香蕉", "Banana", deck.ID.String())
 			if err != nil {
 				t.Fatalf("Failed to create card: %v", err)
 			}
-			_, err = dao.CreateCard("梨", "Pear", deck.ID.String())
+			card4, err = dao.CreateCard("梨", "Pear", deck.ID.String())
 			if err != nil {
 				t.Fatalf("Failed to create card: %v", err)
 			}
@@ -52,7 +55,7 @@ func TestLearnDao(t *testing.T) {
 			}
 			learningSessionId = learningSession.ID.String()
 		})
-		t.Run("Should get a learning session", func(t *testing.T) {
+		t.Run("Should get an active learning session", func(t *testing.T) {
 			learningSession, err := dao.GetActiveLearningSessionById(learningSessionId)
 			if err != nil {
 				t.Fatalf("Failed to get learning session: %v", err)
@@ -61,5 +64,17 @@ func TestLearnDao(t *testing.T) {
 				t.Fatalf("Expected learning session ID to be %s, got %s", learningSessionId, learningSession.ID.String())
 			}
 		})
+		t.Run("Should get a learning session's next card", func(t *testing.T) {
+			nextCard, err := dao.GetNextLearningSessionCard(learningSessionId, testutils.TestUserId)
+			if err != nil {
+				t.Fatalf("Failed to get next card: %v", err)
+			}
+			cardIds := []string{card1.ID.String(), card2.ID.String(), card3.ID.String(), card4.ID.String()}
+
+			if !slices.Contains(cardIds, nextCard.CardID.String()) {
+				t.Fatalf("Expected card ID to be one of %v, got %s", cardIds, nextCard.CardID.String())
+			}
+		})
+
 	})
 }
