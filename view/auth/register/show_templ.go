@@ -31,7 +31,7 @@ func Show(route string) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"w-full min-h-full flex-1 flex bg-slate-950\"><div class=\"mx-auto max-w-7xl flex-1\"><div class=\"flex flex-col lg:flex-row h-full\"><!--")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"w-full min-h-full flex-1 flex bg-slate-950\"><div class=\"mx-auto max-w-7xl h-full flex-1\"><div class=\"flex flex-col lg:flex-row h-full\"><!--")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -40,7 +40,7 @@ func Show(route string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"relative w-full bg-cover lg:w-6/12 xl:w-7/12 bg-gradient-to-r from-white via-white to-slate-100\"><img src=\"/assets/img/shanghai.jpg\" alt=\"Shanghai\" class=\"w-full h-full object-cover object-center\"><div class=\"w-full h-full absolute top-0 left-0 bg-slate-950/40\"></div></div><!--")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"hidden lg:block relative w-full bg-cover lg:w-6/12 xl:w-7/12 bg-gradient-to-r from-white via-white to-slate-100\"><img src=\"/assets/img/shanghai.jpg\" alt=\"Shanghai\" class=\"w-full h-full object-cover object-center\"><div class=\"w-full h-full absolute top-0 left-0 bg-slate-950/40\"></div></div><!--")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -49,7 +49,7 @@ func Show(route string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"w-full bg-white lg:w-6/12 xl:w-5/12\"><div class=\"flex flex-col justify-center w-full h-full p-10 lg:p-16 xl:p-24\"><h4 class=\"w-full text-3xl font-bold\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("--><div class=\"w-full h-full bg-white lg:w-6/12 xl:w-5/12\"><div class=\"flex flex-col justify-center w-full h-full p-10 lg:p-16 xl:p-24\"><h4 class=\"w-full text-3xl font-bold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -9,7 +9,7 @@ templ RegisterForm(errorMessage error) {
 		@components.Button("w-full", "register", "Register", "", "submit", true)
 		@components.Link("text-center", "/forgot-password", "Forgot password?")
 		if errorMessage != nil {
-			<p class="text-red-500 text-center">{ errorMessage.Error() }</p>
+			<p class="text-red-500 text-center capitalize">{ errorMessage.Error() }</p>
 		}
 	</form>
 }

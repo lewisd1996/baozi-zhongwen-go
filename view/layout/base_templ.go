@@ -78,7 +78,7 @@ func Base(userId, route string, showAppShell bool, children ...string) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/img/favicon.svg\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/img/favicon.png\"></head><body class=\"bg-slate-100 relative flex flex-col\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

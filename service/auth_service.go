@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
+	"github.com/lewisd1996/baozi-zhongwen/util"
 )
 
 type AuthService struct {
@@ -105,6 +106,11 @@ func (service *AuthService) Logout(c echo.Context) error {
 /* -------------------------------- Register -------------------------------- */
 
 func (service *AuthService) Register(username, password string) (*cognitoidentityprovider.SignUpOutput, error) {
+	err := util.ValidatePassword(password)
+	if err != nil {
+		return nil, err
+	}
+
 	input := &cognitoidentityprovider.SignUpInput{
 		ClientId: aws.String(service.clientId),
 		Username: aws.String(username),
