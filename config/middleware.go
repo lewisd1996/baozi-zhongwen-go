@@ -20,9 +20,9 @@ func AddMiddleware(a *app.App, domain string) {
 	}))
 	a.Router.Use(echoMiddleware.TimeoutWithConfig(echoMiddleware.TimeoutConfig{
 		Skipper:      echoMiddleware.DefaultSkipper,
-		ErrorMessage: "custom timeout error message returns to client",
+		ErrorMessage: "Timeout error",
 		OnTimeoutRouteErrorHandler: func(err error, c echo.Context) {
-			fmt.Println("custom timeout error handler")
+			fmt.Println("Timeout error: ", err)
 		},
 		Timeout: 30 * time.Second,
 	}))

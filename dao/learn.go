@@ -1,4 +1,4 @@
-package daos
+package dao
 
 import (
 	"context"
@@ -63,13 +63,12 @@ func (dao *Dao) GetEndedLearningSessionById(sessionId string) (LearningSession, 
 	return sessionRes, nil
 }
 
+// TODO: Should I refactor? Too many responsibilities but equally need to use the same db transaction.
 func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string) (LearningSession, error) {
 	var cards []VCardWithLastReviewed
 	var learningSession LearningSession
 
-	// Begin transaction
 	tx, err := dao.DB.Begin()
-	// Rollback transaction if error
 	defer tx.Rollback()
 
 	if err != nil {
@@ -78,7 +77,6 @@ func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string
 	}
 
 	stmt := table.LearningSession.INSERT(table.LearningSession.DeckID, table.LearningSession.UserID).VALUES(UUID(uuid.MustParse(deckId)), UUID(uuid.MustParse(userId))).RETURNING(table.LearningSession.AllColumns)
-
 	err = stmt.QueryContext(ctx, tx, &learningSession)
 
 	if err != nil {
@@ -99,8 +97,8 @@ func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string
 	}
 	if len(cards) < 4 {
 		println("Not enough cards to start learning session")
-		err = tx.Rollback()
-		return LearningSession{}, fmt.Errorf("Not enough cards to start learning session")
+		tx.Rollback()
+		return LearningSession{}, fmt.Errorf("not enough cards to start learning session")
 	}
 
 	// Insert cards into learning progress

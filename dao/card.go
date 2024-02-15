@@ -1,4 +1,4 @@
-package daos
+package dao
 
 import (
 	"log"
@@ -93,4 +93,17 @@ func (dao *Dao) GetUserCardCount(userId string) (int, error) {
 		return 0, err
 	}
 	return res.Count, nil
+}
+
+func (dao *Dao) DeleteCard(cardId, deckId string) error {
+	stmt := table.Card.DELETE().WHERE(table.Card.ID.EQ(UUID(uuid.MustParse(cardId))).AND(table.Card.DeckID.EQ(UUID(uuid.MustParse(deckId)))))
+
+	_, err := stmt.Exec(dao.DB)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
