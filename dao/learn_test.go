@@ -5,6 +5,7 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/lewisd1996/baozi-zhongwen/internal/testutils"
 	"github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
 )
@@ -75,6 +76,18 @@ func TestLearnDao(t *testing.T) {
 				t.Fatalf("Expected card ID to be one of %v, got %s", cardIds, nextCard.CardID.String())
 			}
 		})
-
+		t.Run("Should get incorrect options for a learning session's next card", func(t *testing.T) {
+			incorrectOptions, err := dao.GetLearningSessionIncorrectOptions(card1.ID, uuid.MustParse(learningSessionId), uuid.MustParse(testutils.TestUserId))
+			if err != nil {
+				t.Fatalf("Failed to get incorrect options: %v", err)
+			}
+			if len(incorrectOptions) != 3 {
+				t.Fatalf("Expected 3 incorrect options, got %d", len(incorrectOptions))
+			}
+			incorrectCardIds := []string{card2.ID.String(), card3.ID.String(), card4.ID.String()}
+			if slices.Contains(incorrectCardIds, card1.ID.String()) {
+				t.Fatalf("Incorrect options should not contain the correct card")
+			}
+		})
 	})
 }
