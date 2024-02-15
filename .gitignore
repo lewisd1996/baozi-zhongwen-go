@@ -27,5 +27,7 @@ tmp
 
 .env
 
+.DS_Store
+._.DS_Store
 **/.DS_Store
-.vscode
+**/._.DS_Store
