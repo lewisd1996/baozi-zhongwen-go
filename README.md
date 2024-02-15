@@ -27,6 +27,7 @@ This Golang application uses the following:
 - [X] Register
 - [X] Email verification
 - [ ] Forgot password
+- [ ] OAuth (Google)
 
 ### Decks
 - [X] Create deck
