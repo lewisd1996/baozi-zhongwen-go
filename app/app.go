@@ -23,7 +23,6 @@ type App struct {
 }
 
 func NewApp() *App {
-
 	// ☁️ AWS
 	session, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-2"),
@@ -56,6 +55,7 @@ func NewApp() *App {
 		panic(err)
 	}
 
+	// 📦 DAO
 	dao := dao.NewDao(db)
 
 	return &App{

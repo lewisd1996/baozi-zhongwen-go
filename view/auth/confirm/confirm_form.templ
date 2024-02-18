@@ -3,7 +3,7 @@ package confirm
 import "github.com/lewisd1996/baozi-zhongwen/view/components"
 
 templ ConfirmForm(username string, errorMessage error, codeResent bool) {
-	<form class="space-y-6 flex flex-col" hx-post="/v1/register/confirm" hx-swap="outerHTML">
+	<form class="space-y-6 flex flex-col" hx-post="/auth/register/confirm" hx-swap="outerHTML">
 		<input type="hidden" name="username" id="username" value={ username }/>
 		@components.Input("w-full", "", "confirmCodeInput", "w-full", "code", "code", "Confirmation Code", "", true)
 		@components.Button("w-full", "submit", "Submit", "", "submit", true)
@@ -19,7 +19,7 @@ templ ConfirmForm(username string, errorMessage error, codeResent bool) {
 	} else {
 		<form>
 			<input type="hidden" name="username" id="username" value={ username }/>
-			<p class="text-gray-500 text-center">Didn't receive the code? <button type="submit" hx-post="/v1/register/confirm/resend" hx-swap="outerHTML">Resend</button></p>
+			<p class="text-gray-500 text-center">Didn't receive the code? <button type="submit" hx-post="/auth/register/confirm/resend" hx-swap="outerHTML">Resend</button></p>
 		</form>
 	}
 }

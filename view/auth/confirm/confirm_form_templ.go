@@ -25,7 +25,7 @@ func ConfirmForm(username string, errorMessage error, codeResent bool) templ.Com
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"space-y-6 flex flex-col\" hx-post=\"/v1/register/confirm\" hx-swap=\"outerHTML\"><input type=\"hidden\" name=\"username\" id=\"username\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"space-y-6 flex flex-col\" hx-post=\"/auth/register/confirm\" hx-swap=\"outerHTML\"><input type=\"hidden\" name=\"username\" id=\"username\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,7 +100,7 @@ func ConfirmForm(username string, errorMessage error, codeResent bool) templ.Com
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button type=\"submit\" hx-post=\"/v1/register/confirm/resend\" hx-swap=\"outerHTML\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button type=\"submit\" hx-post=\"/auth/register/confirm/resend\" hx-swap=\"outerHTML\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

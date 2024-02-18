@@ -2,9 +2,13 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -13,12 +17,26 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/lewisd1996/baozi-zhongwen/util"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
+/* ---------------------------------- Types --------------------------------- */
+
 type AuthService struct {
-	cognitoClient *cognitoidentityprovider.CognitoIdentityProvider
-	jwkSet        jwk.Set
-	clientId      string
+	cognitoClient     *cognitoidentityprovider.CognitoIdentityProvider
+	jwkSet            jwk.Set
+	clientId          string
+	googleOauthConfig *oauth2.Config
+	tokenService      *TokenService
+}
+
+type OAuthCodeExchangeResponse struct {
+	IdToken      string `json:"id_token"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int    `json:"expires_in"`
+	TokenType    string `json:"token_type"`
 }
 
 /* -------------------------------------------------------------------------- */
@@ -28,6 +46,8 @@ type AuthService struct {
 func NewAuthService(cognitoClient *cognitoidentityprovider.CognitoIdentityProvider) *AuthService {
 	cognitoClientId := os.Getenv("AWS_COGNITO_CLIENT_ID")
 	cognitoUserPoolId := os.Getenv("AWS_COGNITO_USER_POOL_ID")
+	googleClientId := os.Getenv("GOOGLE_CLIENT_ID")
+	googleClientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
 
 	if cognitoClientId == "" {
 		panic("missing AWS_COGNITO_CLIENT_ID")
@@ -35,19 +55,37 @@ func NewAuthService(cognitoClient *cognitoidentityprovider.CognitoIdentityProvid
 	if cognitoUserPoolId == "" {
 		panic("missing AWS_COGNITO_USER_POOL_ID")
 	}
+	if googleClientId == "" {
+		panic("missing GOOGLE_CLIENT_ID")
+	}
+	if googleClientSecret == "" {
+		panic("missing GOOGLE_CLIENT_SECRET")
+	}
+
+	var googleOauthConfig = &oauth2.Config{
+		RedirectURL:  os.Getenv("DOMAIN") + "/auth/oauth/google/callback",
+		ClientID:     googleClientId,
+		ClientSecret: googleClientSecret,
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
+		Endpoint:     google.Endpoint,
+	}
 
 	jwkSet := getJWKSet(fmt.Sprintf("https://cognito-idp.eu-west-2.amazonaws.com/%s/.well-known/jwks.json", cognitoUserPoolId))
 
+	TokenService := NewTokenService()
+
 	return &AuthService{
-		cognitoClient: cognitoClient,
-		jwkSet:        jwkSet,
-		clientId:      cognitoClientId,
+		cognitoClient:     cognitoClient,
+		jwkSet:            jwkSet,
+		clientId:          cognitoClientId,
+		googleOauthConfig: googleOauthConfig,
+		tokenService:      TokenService,
 	}
 }
 
 /* ---------------------------------- Login --------------------------------- */
 
-func (service *AuthService) Login(username, password string) (*cognitoidentityprovider.AuthenticationResultType, error) {
+func (service *AuthService) LoginWithUsernamePassword(c echo.Context, username, password string) error {
 	input := &cognitoidentityprovider.InitiateAuthInput{
 		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
 		AuthParameters: map[string]*string{
@@ -58,10 +96,29 @@ func (service *AuthService) Login(username, password string) (*cognitoidentitypr
 	}
 
 	result, err := service.cognitoClient.InitiateAuth(input)
+
 	if err != nil {
-		return nil, err
+		if err.Error() == "UserNotConfirmedException: User is not confirmed." {
+			encodedUsername := url.QueryEscape(username)
+			c.Response().Header().Set("HX-Redirect", "/register/confirm?username="+encodedUsername)
+			return c.NoContent(http.StatusOK)
+		}
+
+		return err
 	}
-	return result.AuthenticationResult, nil
+
+	accessToken := *result.AuthenticationResult.AccessToken
+	refreshToken := *result.AuthenticationResult.RefreshToken
+
+	if accessToken == "" || refreshToken == "" {
+		println("error getting tokens")
+		return echo.NewHTTPError(http.StatusInternalServerError, "error getting tokens")
+	}
+
+	service.tokenService.SetAccessTokenCookie(c, accessToken)
+	service.tokenService.SetRefreshTokenCookie(c, refreshToken)
+
+	return nil
 }
 
 /* --------------------------------- Logout --------------------------------- */
@@ -75,30 +132,12 @@ func (service *AuthService) Logout(c echo.Context) error {
 	}
 
 	accessToken := accessTokenCookie.Value
-
 	service.cognitoClient.GlobalSignOut(&cognitoidentityprovider.GlobalSignOutInput{
 		AccessToken: aws.String(accessToken),
 	})
 
-	deletedAccessTokenCookie := http.Cookie{
-		Name:     "access_token",
-		Value:    "",
-		Expires:  time.Unix(0, 0),
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-	}
-	c.SetCookie(&deletedAccessTokenCookie)
-
-	deletedRefreshTokenCookie := http.Cookie{
-		Name:     "refresh_token",
-		Value:    "",
-		Expires:  time.Unix(0, 0),
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-	}
-	c.SetCookie(&deletedRefreshTokenCookie)
+	service.tokenService.DeleteAccessTokenCookie(c)
+	service.tokenService.DeleteRefreshTokenCookie(c)
 
 	return nil
 }
@@ -184,9 +223,6 @@ func (service *AuthService) RefreshToken(refreshToken string) (*cognitoidentityp
 
 func getJWKSet(jwkUrl string) jwk.Set {
 	jwkCache := jwk.NewCache(context.Background())
-
-	// register a minimum refresh interval for this URL.
-	// when not specified, defaults to Cache-Control and similar resp headers
 	err := jwkCache.Register(jwkUrl, jwk.WithMinRefreshInterval(10*time.Minute))
 	if err != nil {
 		panic("failed to register jwk location")
@@ -202,4 +238,77 @@ func getJWKSet(jwkUrl string) jwk.Set {
 	}
 	// create the cached key set
 	return jwk.NewCachedSet(jwkCache, jwkUrl)
+}
+
+/* ---------------------------------- OAuth --------------------------------- */
+
+func (service *AuthService) GetGoogleLoginURL() string {
+	url := fmt.Sprintf("%s/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s&scope=email+openid&identity_provider=Google", os.Getenv("AWS_COGNITO_URL"), os.Getenv("AWS_COGNITO_CLIENT_ID"), os.Getenv("DOMAIN")+"/auth/oauth/google/callback")
+	return url
+}
+
+func (service *AuthService) SignInWithGoogle(c echo.Context, code string) error {
+	tokenResponse, err := service.exchangeCodeForToken(code)
+
+	if err != nil {
+		println("error exchanging code for token:", err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, "error exchanging code for token")
+	}
+
+	accessToken := tokenResponse.AccessToken
+	refreshToken := tokenResponse.RefreshToken
+
+	if accessToken == "" || refreshToken == "" {
+		println("error getting tokens")
+		return echo.NewHTTPError(http.StatusInternalServerError, "error getting tokens")
+	}
+
+	service.tokenService.SetAccessTokenCookie(c, accessToken)
+	service.tokenService.SetRefreshTokenCookie(c, refreshToken)
+
+	return nil
+}
+
+func (service *AuthService) exchangeCodeForToken(code string) (OAuthCodeExchangeResponse, error) {
+	client := &http.Client{}
+	tokenEndpoint := fmt.Sprintf("%s/oauth2/token", os.Getenv("AWS_COGNITO_URL"))
+
+	data := url.Values{}
+	data.Set("grant_type", "authorization_code")
+	data.Set("client_id", os.Getenv("AWS_COGNITO_CLIENT_ID"))
+	data.Set("code", code)
+	data.Set("redirect_uri", fmt.Sprintf("%s/auth/oauth/google/callback", os.Getenv("DOMAIN")))
+
+	req, err := http.NewRequest("POST", tokenEndpoint, strings.NewReader(data.Encode()))
+	if err != nil {
+		println("error creating request:", err.Error())
+		return OAuthCodeExchangeResponse{}, err
+	}
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		// Handle error
+		println("error making request:", err.Error())
+		return OAuthCodeExchangeResponse{}, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		// Handle error
+		println("error reading response:", err.Error())
+		return OAuthCodeExchangeResponse{}, err
+	}
+
+	var tokenResponse OAuthCodeExchangeResponse
+	err = json.Unmarshal(body, &tokenResponse)
+	if err != nil {
+		// Handle error
+		println("error parsing response:", err.Error())
+		return OAuthCodeExchangeResponse{}, err
+	}
+
+	return tokenResponse, nil
 }

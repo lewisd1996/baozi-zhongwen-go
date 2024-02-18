@@ -25,7 +25,7 @@ templ ProfileMenu(userId string) {
 			x-cloak
 		>
 			<div class="p-1 mt-1 text-sm bg-white border-slate-200/70 text-slate-700">
-				<a hx-post="/v1/logout" hx-swap="outerHTML" @click="menuBarOpen=false" class="relative hover:cursor-pointer flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-slate-100 hover:text-slate-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none">
+				<a hx-get="/auth/logout" hx-swap="outerHTML" @click="menuBarOpen=false" class="relative hover:cursor-pointer flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-slate-100 hover:text-slate-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none">
 					<span>Logout</span>
 				</a>
 			</div>

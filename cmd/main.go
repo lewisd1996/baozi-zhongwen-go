@@ -24,9 +24,6 @@ type Config struct {
 }
 
 func run(cfg Config) error {
-	ctx, cancel := context.WithCancel(cfg.ctx)
-	defer cancel()
-
 	domain := os.Getenv("DOMAIN")
 
 	// 🚀 Initialize app
@@ -48,7 +45,7 @@ func run(cfg Config) error {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 
-	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := a.Router.Shutdown(ctx); err != nil {
 		fmt.Fprintf(os.Stderr, "server shutdown failed: %s\n", err)

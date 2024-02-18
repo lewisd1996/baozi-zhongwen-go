@@ -3,7 +3,7 @@ package register
 import "github.com/lewisd1996/baozi-zhongwen/view/components"
 
 templ RegisterForm(errorMessage error) {
-	<form class="space-y-6 flex flex-col" hx-post="/v1/register" hx-swap="outerHTML">
+	<form class="space-y-6 flex flex-col" hx-post="/auth/register" hx-swap="outerHTML">
 		@components.Input("w-full", "", "loginUsernameInput", "w-full", "email", "username", "Email", "", true)
 		@components.Input("w-full", "", "loginPasswordInput", "w-full", "password", "password", "Password", "", true)
 		@components.Button("w-full", "register", "Register", "", "submit", true)

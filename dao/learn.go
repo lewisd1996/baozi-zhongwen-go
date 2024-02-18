@@ -86,7 +86,7 @@ func (dao *Dao) CreateLearningSession(ctx context.Context, deckId, userId string
 	}
 
 	// Get 4 cards to start learning session
-	newSessionCardsStmt := view.VCardWithLastReviewed.SELECT(view.VCardWithLastReviewed.AllColumns).WHERE(view.VCardWithLastReviewed.DeckID.EQ(UUID(uuid.MustParse(deckId)))).ORDER_BY(view.VCardWithLastReviewed.LastReviewedAt.ASC()).LIMIT(4)
+	newSessionCardsStmt := view.VCardWithLastReviewed.SELECT(view.VCardWithLastReviewed.AllColumns).WHERE(view.VCardWithLastReviewed.DeckID.EQ(UUID(uuid.MustParse(deckId)))).ORDER_BY(view.VCardWithLastReviewed.LastReviewedAt.DESC()).LIMIT(4)
 	debugSql := newSessionCardsStmt.DebugSql()
 	log.Println(debugSql)
 	err = newSessionCardsStmt.QueryContext(ctx, tx, &cards)

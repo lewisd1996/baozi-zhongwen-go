@@ -15,7 +15,7 @@ func NewLogoutHandler(a *app.App) LogoutHandler {
 	return LogoutHandler{app: a}
 }
 
-func (h LogoutHandler) HandleLogoutSubmit(c echo.Context) error {
+func (h LogoutHandler) HandleLogout(c echo.Context) error {
 	h.app.Auth.Logout(c)
 	c.Response().Header().Set("HX-Redirect", "/login")
 	return c.NoContent(http.StatusOK)

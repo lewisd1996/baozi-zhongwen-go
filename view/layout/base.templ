@@ -1,7 +1,9 @@
 package layout
 
-import "github.com/google/uuid"
-import "fmt"
+import (
+	"fmt"
+	"github.com/google/uuid"
+)
 
 templ Base(userId, route string, showAppShell bool, children ...string) {
 	<html lang="en">
