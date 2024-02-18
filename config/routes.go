@@ -44,8 +44,10 @@ type AppRoutes struct {
 }
 
 type OAuthRoutes struct {
-	Google         string
-	GoogleCallback string
+	GoogleLogin            string
+	GoogleRegister         string
+	GoogleLoginCallback    string
+	GoogleRegisterCallback string
 }
 
 /* --------------------------------- Routes --------------------------------- */
@@ -74,8 +76,10 @@ var AppRoute = AppRoutes{
 }
 
 var OAuthRoute = OAuthRoutes{
-	Google:         "/auth/oauth/google",
-	GoogleCallback: "/auth/oauth/google/callback",
+	GoogleLogin:            "/auth/oauth/google/login",
+	GoogleRegister:         "/auth/oauth/google/register",
+	GoogleLoginCallback:    "/auth/oauth/google/login/callback",
+	GoogleRegisterCallback: "/auth/oauth/google/register/callback",
 }
 
 var AuthRoute = AuthRoutes{
@@ -119,8 +123,10 @@ func AddRoutes(e *echo.Echo, a *app.App) {
 	RegisterHandler := handler.NewRegisterHandler(a)
 
 	// OAuth
-	a.Router.GET(Routes.Auth.OAuthRoute.Google, OAuthHandler.HandleGetGoogleLogin)
-	a.Router.GET(Routes.Auth.OAuthRoute.GoogleCallback, OAuthHandler.HandleGoogleLoginCallback)
+	a.Router.GET(Routes.Auth.OAuthRoute.GoogleLogin, OAuthHandler.HandleGetGoogleLogin)
+	a.Router.GET(Routes.Auth.OAuthRoute.GoogleRegister, OAuthHandler.HandleGetGoogleRegister)
+	a.Router.GET(Routes.Auth.OAuthRoute.GoogleLoginCallback, OAuthHandler.HandleGoogleLoginCallback)
+	a.Router.GET(Routes.Auth.OAuthRoute.GoogleRegisterCallback, OAuthHandler.HandleGoogleRegisterCallback)
 	// Login
 	a.Router.POST(Routes.Auth.Login, LoginHandler.HandleLoginSubmit)
 	// Logout

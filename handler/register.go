@@ -31,7 +31,7 @@ func (h RegisterHandler) HandleRegisterConfirmShow(c echo.Context) error {
 
 func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 	username, password := c.FormValue("username"), c.FormValue("password")
-	authResult, err := h.app.Auth.Register(username, password)
+	authResult, err := h.app.Auth.RegisterWithUsernameAndPassword(username, password)
 
 	if err != nil {
 		log.Println(err)
@@ -41,6 +41,10 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 	// Create user in database
 	userSub := *authResult.UserSub
 	userId, err := uuid.Parse(userSub)
+	if err != nil {
+		log.Println(err)
+		return HTML(c, register.RegisterForm(fmt.Errorf("Failed to parse user sub")))
+	}
 	err = h.app.Dao.CreateUser(username, userId)
 
 	if err != nil {

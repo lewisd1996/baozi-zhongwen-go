@@ -20,22 +20,56 @@ func NewOAuthHandler(a *app.App) OAuthHandler {
 /* --------------------------------- Google --------------------------------- */
 
 func (h OAuthHandler) HandleGetGoogleLogin(c echo.Context) error {
-	c.Response().Header().Set("HX-Redirect", h.app.Auth.GetGoogleLoginURL())
-	println(h.app.Auth.GetGoogleLoginURL())
+	url := h.app.Auth.GetGoogleLoginURL()
+	if url == "" {
+		return c.JSON(500, "error getting google login url")
+	}
+	c.Response().Header().Set("HX-Redirect", url)
+	return c.NoContent(302)
+}
+
+func (h OAuthHandler) HandleGetGoogleRegister(c echo.Context) error {
+	url := h.app.Auth.GetGoogleRegisterURL()
+	if url == "" {
+		return c.JSON(500, "error getting google register url")
+	}
+	c.Response().Header().Set("HX-Redirect", url)
 	return c.NoContent(302)
 }
 
 func (h OAuthHandler) HandleGoogleLoginCallback(c echo.Context) error {
+	println("USER LOGGING IN WITH GOOGLE")
 	code := c.QueryParam("code")
 
 	if code == "" {
 		return c.Redirect(302, "/auth/login?error=google_oauth_error")
 	}
 
-	err := h.app.Auth.SignInWithGoogle(c, code)
+	err := h.app.Auth.SignInWithGoogle(c, code, h.app.Dao)
 
 	if err != nil {
-		return c.Redirect(302, "/auth/login?error=google_oauth_error")
+		if err.Error() == "user is not registered" {
+			return c.Redirect(302, "/login?error=not_registered")
+		}
+	}
+
+	return c.Redirect(302, "/")
+}
+
+func (h OAuthHandler) HandleGoogleRegisterCallback(c echo.Context) error {
+	println("[HandleGoogleRegisterCallback]: USER REGISTERING WITH GOOGLE")
+	code := c.QueryParam("code")
+
+	if code == "" {
+		println("[HandleGoogleRegisterCallback]: code is empty")
+		return c.Redirect(302, "/auth/register?error=google_oauth_error")
+	}
+
+	err := h.app.Auth.RegisterWithGoogle(c, code, h.app.Dao)
+
+	if err != nil {
+		println("[HandleGoogleRegisterCallback]: error:", err.Error())
+		return c.Redirect(302, "/auth/register?error=google_oauth_error")
 	}
 
 	return c.Redirect(302, "/")

@@ -2,7 +2,7 @@ package login
 
 import "github.com/lewisd1996/baozi-zhongwen/view/layout"
 
-templ Show(route string) {
+templ Show(errorMessage, route string) {
 	@layout.Base("", route, false) {
 		<section class="w-full min-h-full flex-1 flex bg-slate-950">
 			<div class="mx-auto max-w-7xl h-full flex-1">
@@ -18,7 +18,7 @@ templ Show(route string) {
 							<h4 class="w-full text-3xl font-bold">Login</h4>
 							<p class="text-lg text-slate-500">or <a href="/register" class="text-teal-600 underline" data-primary="teal-600">register</a></p>
 							<div class="relative w-full mt-8">
-								@LoginForm(nil)
+								@LoginForm(errorMessage)
 							</div>
 						</div>
 					</div>

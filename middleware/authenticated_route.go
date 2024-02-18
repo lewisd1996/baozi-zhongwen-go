@@ -3,7 +3,6 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 	"github.com/labstack/echo/v4"
 	"github.com/lewisd1996/baozi-zhongwen/service"
 )
@@ -23,6 +22,7 @@ func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthSe
 		token, err := service.ValidateToken(tokenString)
 
 		if err != nil {
+			println("[AuthenticatedRouteMiddleware] Token validation failed: ", err.Error())
 			// If access token is expired, try to refresh it
 			refreshToken, err := c.Cookie("refresh_token")
 			if err != nil {
@@ -33,7 +33,11 @@ func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthSe
 			if err != nil {
 				return c.Redirect(http.StatusFound, "/login")
 			}
-			setTokenCookies(c, result)
+
+			// Set the new tokens in the cookies
+			service.TokenService.SetAccessTokenCookie(c, *result.AccessToken)
+			service.TokenService.SetRefreshTokenCookie(c, *result.RefreshToken)
+
 			newToken, err := service.ValidateToken(*result.AccessToken)
 			if err != nil {
 				return c.Redirect(http.StatusFound, "/login")
@@ -62,31 +66,5 @@ func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthSe
 
 		// Token is valid, proceed with the request
 		return next(c)
-	}
-}
-
-/* ---------------------------- Utility functions --------------------------- */
-
-func setTokenCookies(c echo.Context, tokens *cognitoidentityprovider.AuthenticationResultType) {
-	// Set access token cookie
-	accessTokenCookie := http.Cookie{
-		Name:     "access_token",
-		Value:    *tokens.AccessToken,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-	}
-	c.SetCookie(&accessTokenCookie)
-
-	// Set refresh token cookie, if you receive a new one
-	if tokens.RefreshToken != nil {
-		refreshTokenCookie := http.Cookie{
-			Name:     "refresh_token",
-			Value:    *tokens.RefreshToken,
-			Path:     "/",
-			HttpOnly: true,
-			Secure:   true,
-		}
-		c.SetCookie(&refreshTokenCookie)
 	}
 }

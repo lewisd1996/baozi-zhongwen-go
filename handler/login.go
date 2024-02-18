@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +18,16 @@ func NewLoginHandler(a *app.App) LoginHandler {
 }
 
 func (h LoginHandler) HandleLoginShow(c echo.Context) error {
-	return Render(c, login.Show(c.Path()))
+	err := c.QueryParam("error")
+	var errorMessage string
+	if err != "" {
+		if err == "not_registered" {
+			errorMessage = "You are not registered. Please register first."
+		} else {
+			errorMessage = fmt.Sprintf("Error: %s", err)
+		}
+	}
+	return Render(c, login.Show(errorMessage, c.Path()))
 }
 
 func (h LoginHandler) HandleLoginSubmit(c echo.Context) error {
