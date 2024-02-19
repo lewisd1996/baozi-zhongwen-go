@@ -26,7 +26,7 @@ func DecksList(class string, decks []model.Deck) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{class, "grid grid-cols-1 gap-x-6 gap-y-8 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8"}
+		var templ_7745c5c3_Var2 = []any{class, "grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8"}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -151,7 +151,7 @@ func CreateDeckListItem() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"overflow-hidden rounded-xl border border-slate-900/5 hover:border-teal-900/10 hover:cursor-pointer\"><button class=\"flex flex-col p-6 space-y-2 w-full\" @click=\"fullscreenModal=true\" type=\"button\"><div class=\"flex space-x-2 items-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"overflow-hidden h-full rounded-xl border border-slate-900/5 hover:border-teal-900/10 hover:cursor-pointer\"><button class=\"flex flex-col p-6 space-y-2 w-full\" @click=\"fullscreenModal=true\" type=\"button\"><div class=\"flex space-x-2 items-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

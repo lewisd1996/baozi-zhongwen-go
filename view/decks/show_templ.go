@@ -81,7 +81,7 @@ func Show(decks []model.Deck, userId, route, toastMessage, toastType string) tem
 					templ_7745c5c3_Buffer = templ.GetBuffer()
 					defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-1 flex-col flex-wrap space-y-8 md:space-y-0\"><h1 class=\"text-slate-900 font-semibold text-lg lg:hidden\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-1 flex-col flex-wrap space-y-8 lg:space-y-0\"><h1 class=\"text-slate-900 font-semibold text-lg lg:hidden\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

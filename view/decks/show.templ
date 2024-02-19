@@ -16,7 +16,7 @@ templ Show(decks []model.Deck, userId, route, toastMessage, toastType string) {
 		}
 	} else {
 		@layout.Base(userId, route, true) {
-			<div class="flex flex-1 flex-col flex-wrap space-y-8 md:space-y-0">
+			<div class="flex flex-1 flex-col flex-wrap space-y-8 lg:space-y-0">
 				<h1 class="text-slate-900 font-semibold text-lg lg:hidden">Decks</h1>
 				@DecksList("", decks)
 			</div>

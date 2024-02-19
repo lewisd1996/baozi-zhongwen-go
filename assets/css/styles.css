@@ -2172,6 +2172,12 @@ video {
     flex-direction: column;
   }
 
+  .lg\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+  }
+
   .lg\:border-white\/20 {
     border-color: rgb(255 255 255 / 0.2);
   }
@@ -2230,10 +2236,6 @@ video {
 
   .xl\:w-7\/12 {
     width: 58.333333%;
-  }
-
-  .xl\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .xl\:gap-x-8 {

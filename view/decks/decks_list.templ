@@ -4,7 +4,7 @@ import "github.com/lewisd1996/baozi-zhongwen/sql/.jet/bz/public/model"
 import "github.com/lewisd1996/baozi-zhongwen/view/icons"
 
 templ DecksList(class string, decks []model.Deck) {
-	<ul role="list" class={ class, "grid grid-cols-1 gap-x-6 gap-y-8 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8" }>
+	<ul role="list" class={ class, "grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8" }>
 		@CreateDeckFullScreenModal() {
 			@CreateDeckListItem()
 		}
@@ -24,7 +24,7 @@ templ DecksListItem(deck model.Deck) {
 }
 
 templ CreateDeckListItem() {
-	<li class="overflow-hidden rounded-xl border border-slate-900/5 hover:border-teal-900/10 hover:cursor-pointer">
+	<li class="overflow-hidden h-full rounded-xl border border-slate-900/5 hover:border-teal-900/10 hover:cursor-pointer">
 		<button class="flex flex-col p-6 space-y-2 w-full" @click="fullscreenModal=true" type="button">
 			<div class="flex space-x-2 items-center">
 				@icons.PlusIcon("w-5 h-5 text-teal-600")
