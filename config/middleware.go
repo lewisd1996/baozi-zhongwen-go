@@ -9,13 +9,13 @@ import (
 	"github.com/lewisd1996/baozi-zhongwen/app"
 )
 
-func AddMiddleware(a *app.App, domain string) {
+func AddMiddleware(a *app.App, origin string) {
 	a.Router.Use(echoMiddleware.LoggerWithConfig(echoMiddleware.LoggerConfig{
 		Format: "time=${time_rfc3339} | method=${method} | uri=${uri} | status=${status} | host=${host}\n",
 	}))
 	a.Router.Use(echoMiddleware.RateLimiter(echoMiddleware.NewRateLimiterMemoryStore(20)))
 	a.Router.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
-		AllowOrigins: []string{domain},
+		AllowOrigins: []string{origin},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	a.Router.Use(echoMiddleware.TimeoutWithConfig(echoMiddleware.TimeoutConfig{

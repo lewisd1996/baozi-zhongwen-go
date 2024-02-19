@@ -21,7 +21,16 @@ func NewRegisterHandler(a *app.App) RegisterHandler {
 }
 
 func (h RegisterHandler) HandleRegisterShow(c echo.Context) error {
-	return Render(c, register.Show(c.Path()))
+	err := c.QueryParam("error")
+	var errorMessage string
+	if err != "" {
+		if err == "email_exists" {
+			errorMessage = "An account with that email already exists. Please log in or use a different email."
+		} else {
+			errorMessage = fmt.Sprintf("Error: %s", err)
+		}
+	}
+	return Render(c, register.Show(errorMessage, c.Path()))
 }
 
 func (h RegisterHandler) HandleRegisterConfirmShow(c echo.Context) error {
@@ -35,7 +44,7 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 
 	if err != nil {
 		log.Println(err)
-		return HTML(c, register.RegisterForm(err))
+		return HTML(c, register.RegisterForm(err.Error()))
 	}
 
 	// Create user in database
@@ -43,13 +52,13 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 	userId, err := uuid.Parse(userSub)
 	if err != nil {
 		log.Println(err)
-		return HTML(c, register.RegisterForm(fmt.Errorf("Failed to parse user sub")))
+		return HTML(c, register.RegisterForm("Failed to parse user sub"))
 	}
 	err = h.app.Dao.CreateUser(username, userId)
 
 	if err != nil {
 		log.Println(err)
-		return HTML(c, register.RegisterForm(fmt.Errorf("Failed to create user")))
+		return HTML(c, register.RegisterForm("Failed to create user"))
 	}
 
 	if authResult.UserConfirmed == nil || !*authResult.UserConfirmed {

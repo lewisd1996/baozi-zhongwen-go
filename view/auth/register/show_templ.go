@@ -12,7 +12,7 @@ import "bytes"
 
 import "github.com/lewisd1996/baozi-zhongwen/view/layout"
 
-func Show(route string) templ.Component {
+func Show(errorMessage, route string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -80,7 +80,7 @@ func Show(route string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = RegisterForm(nil).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = RegisterForm(errorMessage).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

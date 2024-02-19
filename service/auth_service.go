@@ -65,7 +65,7 @@ func NewAuthService(cognitoClient *cognitoidentityprovider.CognitoIdentityProvid
 	}
 
 	var googleOauthConfig = &oauth2.Config{
-		RedirectURL:  os.Getenv("DOMAIN") + "/auth/oauth/google/callback",
+		RedirectURL:  os.Getenv("URL") + "/auth/oauth/google/callback",
 		ClientID:     googleClientId,
 		ClientSecret: googleClientSecret,
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
@@ -245,12 +245,12 @@ func getJWKSet(jwkUrl string) jwk.Set {
 /* ---------------------------------- OAuth --------------------------------- */
 
 func (service *AuthService) GetGoogleLoginURL() string {
-	url := fmt.Sprintf("%s/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s&identity_provider=Google", os.Getenv("AWS_COGNITO_URL"), os.Getenv("AWS_COGNITO_CLIENT_ID"), os.Getenv("DOMAIN")+"/auth/oauth/google/login/callback")
+	url := fmt.Sprintf("%s/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s&identity_provider=Google", os.Getenv("AWS_COGNITO_URL"), os.Getenv("AWS_COGNITO_CLIENT_ID"), os.Getenv("URL")+"/auth/oauth/google/login/callback")
 	return url
 }
 
 func (service *AuthService) GetGoogleRegisterURL() string {
-	url := fmt.Sprintf("%s/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s&identity_provider=Google", os.Getenv("AWS_COGNITO_URL"), os.Getenv("AWS_COGNITO_CLIENT_ID"), os.Getenv("DOMAIN")+"/auth/oauth/google/register/callback")
+	url := fmt.Sprintf("%s/oauth2/authorize?response_type=code&client_id=%s&redirect_uri=%s&identity_provider=Google", os.Getenv("AWS_COGNITO_URL"), os.Getenv("AWS_COGNITO_CLIENT_ID"), os.Getenv("URL")+"/auth/oauth/google/register/callback")
 	return url
 }
 
@@ -307,7 +307,6 @@ func (service *AuthService) SignInWithGoogle(c echo.Context, code string, dao *d
 }
 
 func (service *AuthService) RegisterWithGoogle(c echo.Context, code string, dao *dao.Dao) error {
-	println("USER REGISTERING WITH GOOGLE")
 	tokenResponse, err := service.exchangeRegisterCodeForToken(code)
 
 	if err != nil {
@@ -343,11 +342,17 @@ func (service *AuthService) RegisterWithGoogle(c echo.Context, code string, dao 
 	println("Creating this user in db:", sub, email)
 
 	// Check if user exists in database
-	_, err = dao.GetUserById(sub)
+	_, err = dao.GetUserByEmail(email)
 
 	if err == nil {
 		println("[RegisterWithGoogle] - user already exists")
-		return fmt.Errorf("user already exists")
+		_, err := service.cognitoClient.DeleteUser(&cognitoidentityprovider.DeleteUserInput{
+			AccessToken: aws.String(accessToken),
+		})
+		if err != nil {
+			println("error deleting user from cognito:", err.Error())
+		}
+		return fmt.Errorf("user email already exists")
 	}
 
 	// Create user in database
@@ -374,11 +379,11 @@ func (service *AuthService) exchangeLoginCodeForToken(code string) (OAuthCodeExc
 	data.Set("grant_type", "authorization_code")
 	data.Set("client_id", os.Getenv("AWS_COGNITO_CLIENT_ID"))
 	data.Set("code", code)
-	data.Set("redirect_uri", fmt.Sprintf("%s/auth/oauth/google/login/callback", os.Getenv("DOMAIN")))
+	data.Set("redirect_uri", fmt.Sprintf("%s/auth/oauth/google/login/callback", os.Getenv("URL")))
 
 	req, err := http.NewRequest("POST", tokenEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
-		println("error creating request:", err.Error())
+		println("[AuthService.exchangeLoginCodeForToken]: error creating request:", err.Error())
 		return OAuthCodeExchangeResponse{}, err
 	}
 
@@ -387,7 +392,7 @@ func (service *AuthService) exchangeLoginCodeForToken(code string) (OAuthCodeExc
 	resp, err := client.Do(req)
 	if err != nil {
 		// Handle error
-		println("error making request:", err.Error())
+		println("[AuthService.exchangeLoginCodeForToken]: error making request:", err.Error())
 		return OAuthCodeExchangeResponse{}, err
 	}
 	defer resp.Body.Close()
@@ -395,7 +400,7 @@ func (service *AuthService) exchangeLoginCodeForToken(code string) (OAuthCodeExc
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		// Handle error
-		println("error reading response:", err.Error())
+		println("[AuthService.exchangeLoginCodeForToken]: error reading response:", err.Error())
 		return OAuthCodeExchangeResponse{}, err
 	}
 
@@ -403,7 +408,7 @@ func (service *AuthService) exchangeLoginCodeForToken(code string) (OAuthCodeExc
 	err = json.Unmarshal(body, &tokenResponse)
 	if err != nil {
 		// Handle error
-		println("error parsing response:", err.Error())
+		println("[AuthService.exchangeLoginCodeForToken]: error parsing response:", err.Error())
 		return OAuthCodeExchangeResponse{}, err
 	}
 
@@ -418,7 +423,7 @@ func (service *AuthService) exchangeRegisterCodeForToken(code string) (OAuthCode
 	data.Set("grant_type", "authorization_code")
 	data.Set("client_id", os.Getenv("AWS_COGNITO_CLIENT_ID"))
 	data.Set("code", code)
-	data.Set("redirect_uri", fmt.Sprintf("%s/auth/oauth/google/register/callback", os.Getenv("DOMAIN")))
+	data.Set("redirect_uri", fmt.Sprintf("%s/auth/oauth/google/register/callback", os.Getenv("URL")))
 
 	req, err := http.NewRequest("POST", tokenEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {

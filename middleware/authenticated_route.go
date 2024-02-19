@@ -9,6 +9,7 @@ import (
 
 func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthService) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		println("[AuthenticatedRouteMiddleware] Middleware for path: ", c.Path())
 		// Extract the token from the cookie
 		cookie, err := c.Cookie("access_token") // Use the correct cookie name
 
@@ -26,29 +27,36 @@ func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthSe
 			// If access token is expired, try to refresh it
 			refreshToken, err := c.Cookie("refresh_token")
 			if err != nil {
+				println("[AuthenticatedRouteMiddleware] Refresh token not found: ", err.Error())
 				return c.Redirect(http.StatusFound, "/login")
 			}
 
-			result, err := service.RefreshToken(refreshToken.Value)
+			refreshTokenResult, err := service.RefreshToken(refreshToken.Value)
 			if err != nil {
+				println("[AuthenticatedRouteMiddleware] Refresh token failed: ", err.Error())
 				return c.Redirect(http.StatusFound, "/login")
 			}
 
-			// Set the new tokens in the cookies
-			service.TokenService.SetAccessTokenCookie(c, *result.AccessToken)
-			service.TokenService.SetRefreshTokenCookie(c, *result.RefreshToken)
-
-			newToken, err := service.ValidateToken(*result.AccessToken)
-			if err != nil {
+			// Before dereferencing result.AccessToken and result.RefreshToken, check if they're not nil
+			if refreshTokenResult != nil && refreshTokenResult.AccessToken != nil && refreshTokenResult.RefreshToken != nil {
+				newToken, err := service.ValidateToken(*refreshTokenResult.AccessToken)
+				if err != nil {
+					println("[AuthenticatedRouteMiddleware] New token validation failed: ", err.Error())
+					return c.Redirect(http.StatusFound, "/login")
+				}
+				token = newToken
+				service.TokenService.SetAccessTokenCookie(c, *refreshTokenResult.AccessToken)
+				service.TokenService.SetRefreshTokenCookie(c, *refreshTokenResult.RefreshToken)
+			} else {
+				println("[AuthenticatedRouteMiddleware] Refresh token result is nil")
 				return c.Redirect(http.StatusFound, "/login")
 			}
-			token = newToken
 		}
 
 		if token != nil {
 			subInterface, found := token.Get("sub")
 			if !found || subInterface == nil {
-				// Handle missing or nil sub claim
+				println("[AuthenticatedRouteMiddleware] Sub not found in token")
 				return c.Redirect(http.StatusFound, "/login")
 			}
 
@@ -56,15 +64,17 @@ func AuthenticatedRouteMiddleware(next echo.HandlerFunc, service *service.AuthSe
 			sub, ok := subInterface.(string)
 
 			if !ok {
-				// Handle case where sub is not a string
+				println("[AuthenticatedRouteMiddleware] Sub is not a string")
 				return c.Redirect(http.StatusFound, "/login")
 			}
 
+			print("[AuthenticatedRouteMiddleware] User ID: ", sub)
 			// Set the user ID in the context
 			c.Set("user_id", sub)
 		}
 
 		// Token is valid, proceed with the request
+		println("[AuthenticatedRouteMiddleware] Token is valid")
 		return next(c)
 	}
 }

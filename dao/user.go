@@ -32,3 +32,13 @@ func (dao *Dao) GetUserById(id string) (User, error) {
 	}
 	return user, nil
 }
+
+func (dao *Dao) GetUserByEmail(email string) (User, error) {
+	var user User
+	stmt := table.User.SELECT(table.User.AllColumns).WHERE(table.User.Email.EQ(String(email))).LIMIT(1)
+	err := stmt.Query(dao.DB, &user)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}

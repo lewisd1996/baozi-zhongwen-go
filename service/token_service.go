@@ -22,8 +22,8 @@ func (service *TokenService) SetAccessTokenCookie(c echo.Context, accessToken st
 	accessTokenCookie := http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
-		Path:     "/",                 // available to all paths
-		Domain:   os.Getenv("DOMAIN"), // set your domain here (e.g. localhost, myapp.com, etc.)
+		Path:     "/", // available to all paths
+		Domain:   os.Getenv("DOMAIN"),
 		HttpOnly: true,
 		Secure:   true, // consider the environment, as mentioned above
 		// SameSite: http.SameSiteLaxMode, // Uncomment if necessary
@@ -37,7 +37,7 @@ func (service *TokenService) SetRefreshTokenCookie(c echo.Context, refreshToken 
 		Name:     "refresh_token",
 		Value:    refreshToken, // Set your refresh token here
 		Path:     "/",
-		Domain:   os.Getenv("DOMAIN"),                  // set your domain here (e.g. localhost, myapp.com, etc.)
+		Domain:   os.Getenv("DOMAIN"),
 		Expires:  time.Now().Add(365 * 24 * time.Hour), // 1 year, adjust based on your requirements
 		Secure:   true,
 		HttpOnly: true,

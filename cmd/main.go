@@ -24,13 +24,13 @@ type Config struct {
 }
 
 func run(cfg Config) error {
-	domain := os.Getenv("DOMAIN")
+	origin := os.Getenv("URL")
 
 	// 🚀 Initialize app
 	a := app.NewApp()
 
 	// ⚙️ Middleware
-	config.AddMiddleware(a, domain)
+	config.AddMiddleware(a, origin)
 
 	// 📡 Routes
 	config.AddRoutes(a.Router, a)

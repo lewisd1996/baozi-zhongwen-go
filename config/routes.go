@@ -106,11 +106,6 @@ var Routes = struct {
 func AddRoutes(e *echo.Echo, a *app.App) {
 	e.Static("/assets", "assets")
 
-	// Protected group
-	protectedGroup := a.Router.Group("", func(next echo.HandlerFunc) echo.HandlerFunc {
-		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
-	})
-
 	// Handlers
 	CardsHandler := handler.NewCardsHandler(a)
 	DecksHandler := handler.NewDecksHandler(a)
@@ -164,11 +159,21 @@ func AddRoutes(e *echo.Echo, a *app.App) {
 	a.Router.GET(Routes.App.RegisterConfirm, RegisterHandler.HandleRegisterConfirmShow)
 	// 🔒 Authenticated routes
 	// Home
-	protectedGroup.GET(Routes.App.Home, HomeHandler.HandleHomeShow)
+	a.Router.GET(Routes.App.Home, HomeHandler.HandleHomeShow, func(next echo.HandlerFunc) echo.HandlerFunc {
+		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
+	})
 	// Decks
-	protectedGroup.GET(Routes.App.Deck, DecksHandler.HandleDeckShow)
-	protectedGroup.GET(Routes.App.Decks, DecksHandler.HandleDecksShow)
+	a.Router.GET(Routes.App.Deck, DecksHandler.HandleDeckShow, func(next echo.HandlerFunc) echo.HandlerFunc {
+		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
+	})
+	a.Router.GET(Routes.App.Decks, DecksHandler.HandleDecksShow, func(next echo.HandlerFunc) echo.HandlerFunc {
+		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
+	})
 	// Learning
-	protectedGroup.GET(Routes.App.Learn, LearnHandler.HandleLearnShow)
-	protectedGroup.GET(Routes.App.LearnSummary, LearnHandler.HandleLearnSessionSummaryShow)
+	a.Router.GET(Routes.App.Learn, LearnHandler.HandleLearnShow, func(next echo.HandlerFunc) echo.HandlerFunc {
+		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
+	})
+	a.Router.GET(Routes.App.LearnSummary, LearnHandler.HandleLearnSessionSummaryShow, func(next echo.HandlerFunc) echo.HandlerFunc {
+		return middleware.AuthenticatedRouteMiddleware(next, a.Auth)
+	})
 }
