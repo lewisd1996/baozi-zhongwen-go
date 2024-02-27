@@ -75,3 +75,16 @@ func (h CardsHandler) HandleGetCardEdit(c echo.Context) error {
 
 	return HTML(c, decks.EditDeckCardTableRow(cardRes))
 }
+
+// HandleDeleteCard is a handler for DELETE /decks/:deck_id/cards/:card_id
+func (h CardsHandler) HandleDeleteCard(c echo.Context) error {
+	cardId, deckId := c.Param("card_id"), c.Param("deck_id")
+	err := h.app.Dao.DeleteCard(cardId, deckId)
+
+	if err != nil {
+		log.Println(err)
+		return HTML(c, decks.CreateDeckForm(err))
+	}
+
+	return c.NoContent(200)
+}

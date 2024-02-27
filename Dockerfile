@@ -20,9 +20,9 @@ RUN go mod download
 COPY . /app
 
 # Run migrations and jet
-RUN cd sql/migrations && goose fix
-RUN cd sql/migrations && goose postgres "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" up
-RUN jet -dsn="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" -schema=public -path=./sql/.jet generate
+RUN cd internal/sql/migrations && goose fix
+RUN cd internal/sql/migrations && goose postgres "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" up
+RUN jet -dsn="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable" -schema=public -path=./internal/sql/.jet generate
 
 # Build the application
 # Update the build command to target the cmd directory

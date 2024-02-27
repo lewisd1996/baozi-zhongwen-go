@@ -143,6 +143,7 @@ func AddRoutes(e *echo.Echo, a *app.App) {
 	protectedGroupV1.DELETE(Routes.API.V1.Deck, DecksHandler.HandleDeckDelete)
 	// Cards
 	protectedGroupV1.POST(Routes.API.V1.Cards, CardsHandler.HandleCardSubmit)
+	protectedGroupV1.DELETE(Routes.API.V1.Card, CardsHandler.HandleDeleteCard)
 	// Card
 	protectedGroupV1.PATCH(Routes.API.V1.Card, CardsHandler.HandlePatchCard)
 	protectedGroupV1.GET(Routes.API.V1.Card, CardsHandler.HandleGetCard)
