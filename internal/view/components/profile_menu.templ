@@ -1,0 +1,34 @@
+package components;
+
+import "github.com/lewisd1996/baozi-zhongwen/internal/view/icons"
+
+templ ProfileMenu(userId string) {
+	<div
+		x-data="{
+        dropdownOpen: false
+    }"
+		class="relative w-full"
+	>
+		<button @click="dropdownOpen=true" class="flex border-t border-slate-200/70 items-center w-full gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-slate-900 hover:bg-slate-200">
+			<span class="sr-only">Your profile</span>
+			@icons.UserIcon("h-5 w-5")
+			<span>Account</span>
+		</button>
+		<div
+			x-show="dropdownOpen"
+			@click.away="dropdownOpen=false"
+			x-transition:enter="ease-out duration-200"
+			x-transition:enter-start="opacity-0"
+			x-transition:enter-end="-translate-y-full"
+			x-transition:leave="ease-in duration-150"
+			class="absolute top-0 z-50 w-full -translate-x-1/2 left-1/2 -translate-y-full"
+			x-cloak
+		>
+			<div class="p-1 mt-1 text-sm bg-white border-slate-200/70 text-slate-700">
+				<a hx-get="/auth/logout" hx-swap="outerHTML" @click="menuBarOpen=false" class="relative hover:cursor-pointer flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-slate-100 hover:text-slate-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none">
+					<span>Logout</span>
+				</a>
+			</div>
+		</div>
+	</div>
+}

@@ -2,7 +2,7 @@
 
 # Dumpling Chinese (Baozi Zhongwen/包子中文)
 
-__🚧 Note: This is a WIP 🚧__
+**🚧 Note: This is a WIP 🚧**
 
 A web app for learners of Mandarin Chinese.
 
@@ -22,23 +22,28 @@ This Golang application uses the following:
 - [Testcontainers](https://golang.testcontainers.org/)
 
 ## Feature list
+
 ### Auth
-- [X] Login
-- [X] Register
-- [X] Email verification
+
+- [x] Login
+- [x] Register
+- [x] Email verification
 - [ ] Forgot password
-- [ ] OAuth (Google)
+- [x] OAuth (Google)
 
 ### Decks
-- [X] Create deck
-- [X] View deck
-- [X] Edit deck
+
+- [x] Create deck
+- [x] View deck
+- [x] Edit deck
 
 ### Cards
-- [X] Add card to deck
-- [X] Edit card
+
+- [x] Add card to deck
+- [x] Edit card
 - [ ] Delete cards
 
 ### Study
-- [X] Complete study session
-- [X] View study session summaries
+
+- [x] Complete study session
+- [x] View study session summaries

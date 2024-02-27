@@ -1,0 +1,14 @@
+package layout
+
+import "github.com/lewisd1996/baozi-zhongwen/internal/view/components"
+
+templ Shell(userId, route string) {
+	<div x-data="{ open: false }">
+		@components.Navigation(userId, route)
+		<main class="py-6 lg:pl-52 min-h-screen flex flex-col">
+			<div class="px-4 sm:px-6 lg:px-8 flex flex-col flex-1">
+				{ children... }
+			</div>
+		</main>
+	</div>
+}

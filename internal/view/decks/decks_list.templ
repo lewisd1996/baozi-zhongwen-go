@@ -1,0 +1,36 @@
+package decks
+
+import "github.com/lewisd1996/baozi-zhongwen/internal/sql/.jet/bz/public/model"
+import "github.com/lewisd1996/baozi-zhongwen/internal/view/icons"
+
+templ DecksList(class string, decks []model.Deck) {
+	<ul role="list" class={ class, "grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8" }>
+		@CreateDeckFullScreenModal() {
+			@CreateDeckListItem()
+		}
+		for _, item := range decks {
+			@DecksListItem(item)
+		}
+	</ul>
+}
+
+templ DecksListItem(deck model.Deck) {
+	<li class="overflow-hidden rounded-xl border border-slate-900/5 bg-slate-50 hover:border-slate-900/10 hover:cursor-pointer">
+		<a class="flex flex-col p-6 space-y-2" href={ templ.SafeURL("/decks/" + deck.ID.String()) }>
+			<div class="text-base font-medium leading-6 text-slate-900">{ deck.Name }</div>
+			<div class="text-sm text-slate-600">{ deck.Description }</div>
+		</a>
+	</li>
+}
+
+templ CreateDeckListItem() {
+	<li class="overflow-hidden h-full rounded-xl border border-slate-900/5 hover:border-teal-900/10 hover:cursor-pointer">
+		<button class="flex flex-col p-6 space-y-2 w-full" @click="fullscreenModal=true" type="button">
+			<div class="flex space-x-2 items-center">
+				@icons.PlusIcon("w-5 h-5 text-teal-600")
+				<div class="text-base font-medium leading-6 text-slate-900">Create a new deck</div>
+			</div>
+			<div class="text-sm text-slate-600 w-full text-left">Start a new deck to help you learn Chinese</div>
+		</button>
+	</li>
+}

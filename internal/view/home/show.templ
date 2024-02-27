@@ -1,0 +1,13 @@
+package home
+
+import (
+	"github.com/lewisd1996/baozi-zhongwen/internal/view/layout"
+)
+
+templ Show(userId, route string, stats []Stat) {
+	@layout.Base(userId, route, true) {
+		<div>
+			@Stats(stats)
+		</div>
+	}
+}

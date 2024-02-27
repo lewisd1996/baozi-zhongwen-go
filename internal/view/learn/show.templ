@@ -1,0 +1,58 @@
+package learn
+
+import (
+	"github.com/lewisd1996/baozi-zhongwen/internal/view/layout"
+	"strconv"
+	"fmt"
+)
+
+type LearnState struct {
+	SessionID   string
+	CardID      string
+	Content     string
+	Options     []LearnOption
+	ReviewCount int
+}
+
+type LearnOption struct {
+	Translation string
+	Correct     bool
+}
+
+templ Show(userId, route string, state LearnState) {
+	@layout.Base(userId, route, true) {
+		<div class="flex flex-1 flex-col flex-wrap items-center justify-center">
+			@LearnCard(state)
+		</div>
+	}
+}
+
+templ LearnCard(state LearnState) {
+	<div class="flex relative flex-col w-full justify-center items-center lg:w-1/2 mx-auto space-y-2">
+		<span id="count" class="text-teal-900 transition-all absolute top-4 left-4">{ strconv.Itoa(state.ReviewCount + 1) + "/10" }</span>
+		<div id="vocab" class="relative bg-teal-400/10 flex flex-col items-center text-center p-8 bg-slate-900 rounded-md border border-slate-800 w-full transition-all fade-me-in fade-me-out will-change-transform">
+			<h2 id="hanzi" class="text-3xl lg:text-9xl text-teal-900 transition-all hanzi">{ state.Content }</h2>
+		</div>
+		<div x-data="{ show: false }" class="grid grid-cols-2 w-full gap-2">
+			for _, item := range state.Options {
+				@LearnCardOption(state.CardID, item, state.SessionID)
+			}
+		</div>
+	</div>
+}
+
+templ LearnCardOption(cardId string, option LearnOption, sessionId string) {
+	if option.Correct {
+		<div @click="show = true;" class="flex hover:cursor-pointer flex-col items-center justify-center w-full">
+			<button hx-post={ fmt.Sprintf("/v1/learn/%s?card_id=%s&correct=%s", sessionId, cardId, "true") } hx-trigger="click delay:1250ms" :class="{ 'bg-teal-200': show, 'bg-slate-200': !show }" class="flex rounded-lg duration-150 w-full justify-center items-center p-8">
+				{ option.Translation }
+			</button>
+		</div>
+	} else {
+		<div @click="show = true;" class="flex hover:cursor-pointer flex-col items-center justify-center w-full">
+			<button hx-post={ fmt.Sprintf("/v1/learn/%s?card_id=%s&correct=%s", sessionId, cardId, "false") } hx-trigger="click delay:1250ms" :class="{ 'bg-red-200 opacity-50': show, 'bg-slate-200': !show }" class="flex rounded-lg transition-all duration-150 ease-in-out w-full justify-center items-center p-8">
+				{ option.Translation }
+			</button>
+		</div>
+	}
+}

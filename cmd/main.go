@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,19 +10,19 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/lewisd1996/baozi-zhongwen/app"
-	"github.com/lewisd1996/baozi-zhongwen/config"
+	"github.com/lewisd1996/baozi-zhongwen/internal/app"
+	"github.com/lewisd1996/baozi-zhongwen/internal/config"
 )
 
-type Config struct {
-	ctx    context.Context
-	getenv func(string) string
-	stdout io.Writer
-	stderr io.Writer
-	args   []string
-}
+// type Config struct {
+// 	ctx    context.Context
+// 	getenv func(string) string
+// 	stdout io.Writer
+// 	stderr io.Writer
+// 	args   []string
+// }
 
-func run(cfg Config) error {
+func run() error {
 	origin := os.Getenv("URL")
 
 	// 🚀 Initialize app
@@ -65,15 +64,15 @@ func main() {
 		}
 	}
 
-	config := Config{
-		ctx:    context.Background(),
-		getenv: os.Getenv,
-		stdout: os.Stdout,
-		stderr: os.Stderr,
-		args:   os.Args,
-	}
+	// config := Config{
+	// 	ctx:    context.Background(),
+	// 	getenv: os.Getenv,
+	// 	stdout: os.Stdout,
+	// 	stderr: os.Stderr,
+	// 	args:   os.Args,
+	// }
 
-	if err := run(config); err != nil {
+	if err := run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		os.Exit(1)
 	}
