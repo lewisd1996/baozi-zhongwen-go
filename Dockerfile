@@ -33,7 +33,7 @@ FROM gcr.io/distroless/static-debian11 AS release-stage
 WORKDIR /
 # Copy the compiled binary and assets from the build stage
 COPY --from=build-stage /entrypoint /entrypoint
-COPY --from=build-stage /app/internal/assets /assets
+COPY --from=build-stage /app/internal/assets /internal/assets
 # Expose the port your app runs on
 EXPOSE 3000
 # Use a non-root user for running the application
