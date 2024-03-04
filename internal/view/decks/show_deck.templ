@@ -8,42 +8,32 @@ import (
 )
 
 templ ShowDeck(deck model.Deck, cards []model.Card, userId, route, toastMessage, toastType string) {
-	if toastMessage != "" {
-		@layout.Base(userId, route, true) {
-			<div x-init={ fmt.Sprintf("$nextTick(() => {$dispatch('toast-show', {message: '%s', type: '%s'})})", toastMessage, toastType) } class="flex flex-1 flex-col flex-wrap space-y-8">
-				<div class="space-y-2">
-					<div class="flex">
-						<h1 class="text-slate-900 font-semibold text-lg">{ deck.Name }</h1>
-						@DeckSettingsMenu(deck.ID.String())
-					</div>
-					<p>{ deck.Description }</p>
-				</div>
-				<div class="flex flex-col space-y-2">
-					<h2 class="text-slate-900 font-semibold text-base">Learn</h2>
-					<a class="bg-teal-900 text-slate-50 rounded-full px-6 py-3.5" href={ "/learn?deck_id" + templ.SafeURL(deck.ID.String()) }>Start study session</a>
-				</div>
-				@CreateCardForm(deck.ID, nil)
-				@DeckCardTable("", cards)
-			</div>
+	@layout.Base(userId, route, true) {
+		if toastMessage != "" {
+			<div x-init={ fmt.Sprintf("$nextTick(() => {$dispatch('toast-show', {message: '%s', type: '%s'})})", toastMessage, toastType) } class="hidden"></div>
 		}
-	} else {
-		@layout.Base(userId, route, true) {
-			<div class="flex flex-1 flex-col flex-wrap space-y-8">
-				<div class="space-y-2">
-					<div class="flex w-full justify-between">
-						<h1 class="text-slate-900 font-semibold text-lg">{ deck.Name }</h1>
-						@DeckSettingsMenu(deck.ID.String())
-					</div>
-					<p>{ deck.Description }</p>
+		<div class="flex flex-1 flex-col flex-wrap space-y-8">
+			<div class="space-y-2">
+				<div class="flex justify-between items-center">
+					<h1 class="text-slate-900 font-semibold text-lg">{ deck.Name }</h1>
+					@DeckSettingsMenu(deck.ID.String())
 				</div>
-				<div class="flex flex-col space-y-2">
-					<h2 class="text-slate-900 font-semibold text-base">Learn</h2>
+				<p>{ deck.Description }</p>
+			</div>
+			<div class="flex flex-col space-y-2">
+				<h2 class="text-slate-900 font-semibold text-base">Learn</h2>
+				if len(cards) >= 4 {
 					<a class="bg-teal-900 text-slate-50 rounded-full px-6 py-3.5 whitespace-nowrap w-min" href={ "/learn?deck_id=" + templ.SafeURL(deck.ID.String()) }>Start study session</a>
-				</div>
-				@CreateCardForm(deck.ID, nil)
-				@DeckCardTable("", cards)
+				} else {
+					<span class="text-slate-600 inline-flex space-x-1">
+						@icons.LockedIcon("w-5 h-5")
+						<p>Add at least 4 cards to start a study session</p>
+					</span>
+				}
 			</div>
-		}
+			@CreateCardForm(deck.ID, nil)
+			@DeckCardTable("", cards)
+		</div>
 	}
 }
 

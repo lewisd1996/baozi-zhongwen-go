@@ -13,6 +13,10 @@ type LoginHandler struct {
 	app *app.App
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                    Init                                    */
+/* -------------------------------------------------------------------------- */
+
 func NewLoginHandler(a *app.App) LoginHandler {
 	return LoginHandler{app: a}
 }

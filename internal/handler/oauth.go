@@ -38,7 +38,6 @@ func (h OAuthHandler) HandleGetGoogleRegister(c echo.Context) error {
 }
 
 func (h OAuthHandler) HandleGoogleLoginCallback(c echo.Context) error {
-	println("USER LOGGING IN WITH GOOGLE")
 	code := c.QueryParam("code")
 
 	if code == "" {
@@ -57,18 +56,15 @@ func (h OAuthHandler) HandleGoogleLoginCallback(c echo.Context) error {
 }
 
 func (h OAuthHandler) HandleGoogleRegisterCallback(c echo.Context) error {
-	println("[HandleGoogleRegisterCallback]: USER REGISTERING WITH GOOGLE")
 	code := c.QueryParam("code")
 
 	if code == "" {
-		println("[HandleGoogleRegisterCallback]: code is empty")
 		return c.Redirect(302, "/register?error=google_oauth_error")
 	}
 
 	err := h.app.Auth.RegisterWithGoogle(c, code, h.app.Dao)
 
 	if err != nil {
-		println("[HandleGoogleRegisterCallback]: error:", err.Error())
 		if err.Error() == "user email already exists" {
 			return c.Redirect(302, "/register?error=email_exists")
 		}

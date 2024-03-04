@@ -843,10 +843,6 @@ video {
   height: 1.5rem;
 }
 
-.h-8 {
-  height: 2rem;
-}
-
 .h-9 {
   height: 2.25rem;
 }
@@ -913,10 +909,6 @@ video {
 
 .w-6 {
   width: 1.5rem;
-}
-
-.w-8 {
-  width: 2rem;
 }
 
 .w-9 {
@@ -2175,12 +2167,6 @@ video {
 
   .lg\:flex-col {
     flex-direction: column;
-  }
-
-  .lg\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0px * var(--tw-space-y-reverse));
   }
 
   .lg\:border-white\/20 {

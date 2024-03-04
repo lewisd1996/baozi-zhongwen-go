@@ -11,6 +11,10 @@ type LogoutHandler struct {
 	app *app.App
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                    Init                                    */
+/* -------------------------------------------------------------------------- */
+
 func NewLogoutHandler(a *app.App) LogoutHandler {
 	return LogoutHandler{app: a}
 }

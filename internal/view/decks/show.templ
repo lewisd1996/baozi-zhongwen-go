@@ -8,18 +8,12 @@ import (
 
 templ Show(decks []model.Deck, userId, route, toastMessage, toastType string) {
 	if toastMessage != "" {
-		@layout.Base(userId, route, true) {
-			<div x-init={ fmt.Sprintf("$nextTick(() => {$dispatch('toast-show', {message: '%s', type: '%s'})})", toastMessage, toastType) } class="flex flex-1 flex-col flex-wrap space-y-8 md:space-y-0">
-				<h1 class="text-slate-900 font-semibold text-lg lg:hidden">Decks</h1>
-				@DecksList("", decks)
-			</div>
-		}
-	} else {
-		@layout.Base(userId, route, true) {
-			<div class="flex flex-1 flex-col flex-wrap space-y-8 lg:space-y-0">
-				<h1 class="text-slate-900 font-semibold text-lg lg:hidden">Decks</h1>
-				@DecksList("", decks)
-			</div>
-		}
+		<div x-init={ fmt.Sprintf("$nextTick(() => {$dispatch('toast-show', {message: '%s', type: '%s'})})", toastMessage, toastType) } class="hidden">></div>
+	}
+	@layout.Base(userId, route, true) {
+		<div class="flex flex-1 flex-col flex-wrap space-y-8 md:space-y-0">
+			<h1 class="text-slate-900 font-semibold text-lg lg:hidden">Decks</h1>
+			@DecksList("", decks)
+		</div>
 	}
 }

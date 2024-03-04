@@ -53,6 +53,11 @@ func (h DecksHandler) HandleDeckShow(c echo.Context) error {
 
 	cardRes, err := h.app.Dao.GetCardsByDeckId(deckId)
 
+	if err != nil {
+		log.Println(err)
+		return c.Redirect(http.StatusFound, "/404")
+	}
+
 	return Render(c, decks.ShowDeck(deckRes, cardRes, userId, c.Path(), "", ""))
 }
 

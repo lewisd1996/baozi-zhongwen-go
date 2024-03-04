@@ -15,6 +15,10 @@ type LearnHandler struct {
 	app *app.App
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                    Init                                    */
+/* -------------------------------------------------------------------------- */
+
 func NewLearnHandler(a *app.App) LearnHandler {
 	return LearnHandler{app: a}
 }
@@ -33,6 +37,10 @@ func (h LearnHandler) HandleLearnShow(c echo.Context) error {
 		// If no learning session exists, create one
 		if err.Error() == "qrm: no rows in result set" {
 			learningSession, err = h.app.Dao.CreateLearningSession(c.Request().Context(), deckId, userId)
+			if err != nil {
+				println("Error creating learning session:", err.Error())
+				return c.Redirect(302, "/decks")
+			}
 		} else {
 			return c.Redirect(302, "/decks")
 		}
@@ -52,12 +60,23 @@ func (h LearnHandler) HandleLearnShow(c echo.Context) error {
 
 	// Get 3 other cards to be incorrect options
 	incorrectOptions, err := h.app.Dao.GetLearningSessionIncorrectOptions(nextCard.CardLearningProgress.CardID, learningSession.ID, uuid.MustParse(userId))
+
+	if err != nil {
+		println("Error getting incorrect options:", err.Error())
+		return c.Redirect(302, "/decks")
+	}
+
 	for i := range incorrectOptions {
 		println("Incorrect option:", incorrectOptions[i].Translation)
 	}
 
-	var options []learn.LearnOption
-	options = append(incorrectOptions, learn.LearnOption{Translation: nextCard.Translation, Correct: true})
+	var options = []learn.LearnOption{
+		{Translation: nextCard.Translation, Correct: true},
+	}
+
+	for i := range incorrectOptions {
+		options = append(options, learn.LearnOption{Translation: incorrectOptions[i].Translation, Correct: false})
+	}
 
 	// Shuffle options
 	for i := range options {
@@ -135,7 +154,7 @@ func (h LearnHandler) HandleLearnSessionSummaryShow(c echo.Context) error {
 		DeckID:       learningSession.DeckID.String(),
 		SessionID:    learningSession.ID.String(),
 		SessionCards: cards,
-		EndedAt:      learningSession.EndedAt.Format("2006-01-02"),
+		EndedAt:      learningSession.EndedAt.Format("2000-01-02"),
 	}
 
 	return Render(c, learn.ShowSummary(state, userId, c.Path()))

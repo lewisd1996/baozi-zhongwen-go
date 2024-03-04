@@ -16,6 +16,10 @@ type RegisterHandler struct {
 	app *app.App
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                    Init                                    */
+/* -------------------------------------------------------------------------- */
+
 func NewRegisterHandler(a *app.App) RegisterHandler {
 	return RegisterHandler{app: a}
 }
@@ -47,7 +51,6 @@ func (h RegisterHandler) HandleRegisterSubmit(c echo.Context) error {
 		return HTML(c, register.RegisterForm(err.Error()))
 	}
 
-	// Create user in database
 	userSub := *authResult.UserSub
 	userId, err := uuid.Parse(userSub)
 	if err != nil {
